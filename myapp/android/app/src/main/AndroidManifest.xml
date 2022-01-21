@@ -14,7 +14,11 @@
 
        //API KEY for Google Maps
        <meta-data android:name="com.google.android.geo.API_KEY"
+<<<<<<< Updated upstream
            android:value="Your Key Here"/>
+=======
+           android:value="AIzaSyCzouy7d_VdcpHarqsE0tdMSqJqf1kQCW8"/>
+>>>>>>> Stashed changes
 
        <activity
             android:name=".MainActivity"
