@@ -11,8 +11,6 @@ class Gmaps extends StatefulWidget {
 
 class _GmapsState extends State<Gmaps> {
 
-
-
   late GoogleMapController mapController;
 
   // Starting position of the map
