@@ -5,16 +5,19 @@
 # Test routes should work after that
 
 import json
-import flask
+from flask import Flask, render_template, request, session, redirect
 from google.cloud import firestore
+from google.cloud import language
+import os
 
-app = flask.Flask(__name__)
+app = Flask(__name__)
 
 db = firestore.Client(project='bikekollective-467')
 
 # Sample data to test firestore
 @app.route('/')
 def index():
+    print(db.collection)
     return "TEST", 200
 
 
@@ -32,12 +35,25 @@ def adddata():
 @app.route('/readdata')
 def readdata():
     users_ref = db.collection(u'users')
-    docs = users_ref.stream()
+    user_docs = users_ref.stream()
 
-    for doc in docs:
+    bikes_ref = db.collection(u'bikes')
+    bikes_docs = bikes_ref.stream()
+
+    user_list = []
+    bikes_list = []
+
+    for doc in user_docs:
+        user_list.append(doc.to_dict())
+        print(f'{doc.id}=>{doc.to_dict()}')
+    
+    for doc in bikes_docs:
+        bikes_list.append(doc.to_dict())
         print(f'{doc.id}=>{doc.to_dict()}')
 
-    return "", 200
+    return render_template('readData.html',
+    context = {"users": user_list, "bikes" : bikes_list}
+    )
 
 
 if __name__ == '__main__':
