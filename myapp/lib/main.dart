@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'src_exports.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-// The address to reach local host uses port 8080
-// Will change to host address on live server.
-const String hostAddress = "http://10.0.2.2:8080";
 
-void main() {
+
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 

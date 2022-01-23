@@ -5,12 +5,14 @@
 # Test routes should work after that
 
 import json
-from flask import Flask, render_template, request, session, redirect
+from flask import Flask, render_template, request, session, redirect, Blueprint
 from google.cloud import firestore
 from google.cloud import language
 import os
+import locations
 
 app = Flask(__name__)
+app.register_blueprint(locations.bp)
 
 db = firestore.Client(project='bikekollective-467')
 
