@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:http/http.dart' as http;
+import 'constants.dart';
+
+
 
 class Gmaps extends StatefulWidget {
   const Gmaps({Key? key}) : super(key: key);
@@ -14,7 +18,8 @@ class _GmapsState extends State<Gmaps> {
   late GoogleMapController mapController;
 
   // Starting position of the map
-  final LatLng _center = const LatLng(45.521563, -122.677433);
+  // Location is Oregon state university
+  final LatLng _center = const LatLng(44.56457554667605, -123.27994855698064);
 
   // Function to ask permission for location
   Future<void> requestPermission() async { await Permission.location.request();}

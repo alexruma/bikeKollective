@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.myapp">
+    package="com.cs467.bikekollective">
 
     // Permissions for location and internet access
     <uses-permission
@@ -7,18 +7,17 @@
     <uses-permission
         android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET"/>
+
    <application
         android:label="myapp"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        android:usesCleartextTraffic="true">
 
        //API KEY for Google Maps
        <meta-data android:name="com.google.android.geo.API_KEY"
-<<<<<<< Updated upstream
-           android:value="Your Key Here"/>
-=======
            android:value="AIzaSyCzouy7d_VdcpHarqsE0tdMSqJqf1kQCW8"/>
->>>>>>> Stashed changes
+
 
        <activity
             android:name=".MainActivity"
