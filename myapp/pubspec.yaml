@@ -99,6 +99,15 @@ flutter:
     - family:  Pacifico
       fonts:
         - asset: assets/google_fonts/Pacifico-Regular.ttf
+    - family:  Bangers
+      fonts:
+        - asset: assets/google_fonts/Bangers-Regular.ttf
+    - family:  Libre Franklin
+      fonts:
+        - asset: assets/google_fonts/static/LibreFranklin-Black.ttf
+    - family: Zen Kurenaido
+      fonts:
+        - asset: assets/google_fonts/ZenKurenaido-Regular.ttf
   
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
