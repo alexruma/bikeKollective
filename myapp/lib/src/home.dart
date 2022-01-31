@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:bike_kollective/src_exports.dart';
-import 'navbar.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key, required this.title}) : super(key: key);
@@ -21,7 +20,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 20;
+  int _counter = 0;
 
   void _incrementCounter() {
     setState(() {
