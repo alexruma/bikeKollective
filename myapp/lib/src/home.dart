@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:bike_kollective/src_exports.dart';
+import 'navbar.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key, required this.title}) : super(key: key);

@@ -9,9 +9,9 @@
     <uses-permission android:name="android.permission.INTERNET"/>
 
    <application
-        android:label="myapp"
+        android:label="Bike Kollective"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/flutter_icon"
         android:usesCleartextTraffic="true">
 
        //API KEY for Google Maps
