@@ -21,3 +21,4 @@ doc/api/
 *.js.map
 myapp/.flutter-plugins
 myapp/.flutter-plugins-dependencies
+myapp/lib/firebase_options.dart
