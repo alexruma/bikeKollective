@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'src_exports.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
 
 
 void main() async{
   // Setting need to start firebase
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 
@@ -31,7 +34,8 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Bike Kollective'),
+      //home: const LoginPage(title: 'Bike Kollective'),
+      home: const SignIn(),
     );
   }
 }
