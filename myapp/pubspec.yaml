@@ -78,6 +78,7 @@ flutter:
       - assets/images/bike-icon.png
       - assets/images/spoke-bike.jpg
       - assets/images/rider-bike-icon.png
+      - assets/images/btn_google_signin_dark_normal_web.png
       
   #   - images/a_dot_ham.jpeg
 
