@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:bike_kollective/src_exports.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key, required this.title}) : super(key: key);
@@ -53,6 +54,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ]),
       ),
+      bottomNavigationBar: NavBar.navBar(),
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
