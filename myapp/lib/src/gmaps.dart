@@ -73,7 +73,6 @@ class _GmapsState extends State<Gmaps> {
     final lt.Distance distance = lt.Distance();
     _location.onLocationChanged.listen((event) {
       setState(() {
-        //print(event);
         bikeLoc.forEach((key, value) {
           var space1 = distance.as(lt.LengthUnit.Meter,
             lt.LatLng(event.latitude??00.0,event.longitude??00.00),
@@ -121,6 +120,7 @@ class _GmapsState extends State<Gmaps> {
 
   initMarker(bike){
     // Set state need to update markers on Gmap
+    // Set state handled with location update.
 
       var rating = bike['rating'];
       var hue = BitmapDescriptor.hueAzure;
@@ -163,6 +163,7 @@ class _GmapsState extends State<Gmaps> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
+          // Google Map
           Expanded(
             flex: 14,
             child: GoogleMap(
@@ -175,6 +176,7 @@ class _GmapsState extends State<Gmaps> {
               markers: Set<Marker>.of(_markers),
             ),
           ),
+          //Bike List Widget
           Expanded(flex: 5,
           child:
           StreamBuilder<QuerySnapshot>(stream: bikes,
@@ -187,10 +189,12 @@ class _GmapsState extends State<Gmaps> {
             }
             final data = snapshot.requireData;
             var items = snapshot.data?.docs;
+            //Bikes added to dictionary
+            //Updated through locaiton update
             items?.forEach((bike) {initMarker(bike);});
-            _markers;
 
 
+            //List builder for bike list
             return ListView.builder(
                 scrollDirection: Axis.horizontal,
                 shrinkWrap: true,
