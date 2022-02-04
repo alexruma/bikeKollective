@@ -19,4 +19,7 @@ doc/api/
 *.js_
 *.js.deps
 *.js.map
+myapp/.flutter-plugins
+myapp/.flutter-plugins-dependencies
 myapp/lib/firebase_options.dart
+.env*

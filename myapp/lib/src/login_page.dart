@@ -1,106 +1,57 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutterfire_ui/auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:bike_kollective/src_exports.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key, required this.title}) : super(key: key);
 
-  final String title;
+
+class AuthGate extends StatelessWidget {
+  const AuthGate({ Key? key }) : super(key: key);
 
   @override
-  State<LoginPage> createState() => _LoginState();
-}
+  Widget build(BuildContext context){
+    final Map<String, String>env = Platform.environment;
+    final String clientID = env["googleCID"] ?? '';
+    
+    const List<ProviderConfiguration> providerConfigs = [
+      EmailProviderConfiguration(), 
+      GoogleProviderConfiguration(
+        clientId: ''
+      )
+    ];
 
-class _LoginState extends State<LoginPage> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        resizeToAvoidBottomInset: true,
-        appBar: AppBar(
-          title: Center(child: Text("Login")),
-        ),
-        bottomNavigationBar: NavBar.navBar(),
-        body: Center(
-          child: Column(
-            children: <Widget>[
-              Expanded(
-                child: Image.asset(
-                  'assets/images/rider-bike-icon.png',
-                  height: 200,
-                  width: 200,
-                ),
-              ),
-              Expanded(
-                child: Padding(
-                  padding: EdgeInsets.all(25),
-                  child: Text(
-                    "Sign in",
-                    style: GoogleFonts.pacifico(
-                        textStyle: const TextStyle(
-                      fontSize: 34,
-                    )),
-                  ),
-                ),
-              ),
-              headlineText("Email Address"),
-              Expanded(child: inputField('Enter Email Address'), flex: 1),
-              headlineText("Password"),
-              Expanded(child: passwordField('Enter Password'), flex: 1),
-              Container(
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.blueAccent),
-                  borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                ),
-                child: TextButton(
-                  onPressed: () {
-                    //TODO FORGOT PASSWORD SCREEN GOES HERE
-                  },
-                  child: const Text(
-                    'Forgot Password',
-                    style: TextStyle(color: Colors.blue, fontSize: 15),
-                  ),
-                ),
-              ),
-            ],
+    return MaterialApp(
+      theme: ThemeData(
+        textTheme: TextTheme(
+          headline5: GoogleFonts.pacifico(
+            textStyle: const TextStyle(
+              fontSize: 42,
+            ),
           ),
-        ));
-  }
-
-  Widget headlineText(widgetText) {
-    return Expanded(
-      child: Align(
-          alignment: Alignment.bottomCenter,
-          child: Padding(
-              padding: EdgeInsets.all(10),
-              child: Text(
-                widgetText,
-                style: Theme.of(context).textTheme.headline6,
-              ))),
-    );
-  }
-
-  Widget inputField(labelText) {
-    return Padding(
-      padding: const EdgeInsets.all(2),
-      child: TextField(
-        decoration: InputDecoration(
-          border: const OutlineInputBorder(),
-          labelText: labelText,
-        ),
+        )
       ),
-    );
-  }
-
-  Widget passwordField(labelText) {
-    return Padding(
-      padding: const EdgeInsets.all(2),
-      child: TextField(
-        obscureText: true,
-        decoration: InputDecoration(
-          border: const OutlineInputBorder(),
-          labelText: labelText,
+      initialRoute: FirebaseAuth.instance.currentUser == null ? '/sign-in' : '/profile',
+      routes: {
+        '/sign-in': (context) => const SignIn(
+          providerConfigs: providerConfigs
         ),
-      ),
+        '/home' : (context) => const Gmaps(),
+        '/forgot-password' : (context) => const BKForgotPassword(),
+        '/profile' : (context) => ProfileScreen(
+          providerConfigs: providerConfigs,
+          actions: [
+            SignedOutAction((context) {
+              Navigator.of(context).pushReplacementNamed('/sign-in');
+            }),
+          ]
+        )
+      }
     );
   }
 }
+
+
+
+

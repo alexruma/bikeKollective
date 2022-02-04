@@ -1,17 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'src_exports.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
 
 
 void main() async{
   // Setting need to start firebase
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  
   const MyApp({Key? key}) : super(key: key);
 
   // This widget is the root of your application.
@@ -20,18 +25,16 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Bike Kollective',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
         primarySwatch: Colors.blue,
+        textTheme: TextTheme(
+          headline5: GoogleFonts.pacifico(
+            textStyle: const TextStyle(
+              fontSize: 42,
+            )
+          )
+        )
       ),
-      home: Gmaps(),
+      home: const AuthGate(),
     );
   }
 }

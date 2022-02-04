@@ -157,9 +157,9 @@ class _GmapsState extends State<Gmaps> {
   Widget build(BuildContext context) {
   currLocation();
     return Scaffold(
-      resizeToAvoidBottomInset:
-      false,
-        appBar: AppBar(title: const Text("Bike Kollective"),),
+      resizeToAvoidBottomInset: false,
+      appBar: AppBar(title: const Text("Bike Kollective"),),
+      // bottomNavigationBar: NavBar(),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
