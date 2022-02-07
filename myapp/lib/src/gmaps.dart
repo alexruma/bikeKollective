@@ -12,8 +12,6 @@ import 'package:latlong2/latlong.dart' as lt;
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:firebase_image/firebase_image.dart';
 
-
-
 class Gmaps extends StatefulWidget {
   const Gmaps({Key? key}) : super(key: key);
 
@@ -22,10 +20,9 @@ class Gmaps extends StatefulWidget {
 }
 
 class _GmapsState extends State<Gmaps> {
-
   //location
-  final Location  _location = Location();
-  late var listen = _location.onLocationChanged.listen((event) { });
+  final Location _location = Location();
+  late var listen = _location.onLocationChanged.listen((event) {});
 
   //Dictionary of distance from user True or False if close enough
   Map<String, bool> closePoint = {};
@@ -39,7 +36,9 @@ class _GmapsState extends State<Gmaps> {
   final List<Marker> _markers = <Marker>[];
 
 
+
   final Stream<QuerySnapshot> bikes = FirebaseFirestore.instance.collection('bikes').snapshots();
+
 
 
   // Starting position of the map
@@ -49,28 +48,29 @@ class _GmapsState extends State<Gmaps> {
 
   bool UserCheckout = true;
   // Function to ask permission for location
+
   Future<void> requestPermission() async { await Permission.location.request();
   setState(() {
   });}
-  // Startup tasks when map is created
-  void _onMapCreated(GoogleMapController controller){
 
+
+  // Startup tasks when map is created
+  void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
     createMarkers();
   }
 
   //Init State
   @override
-  void initState(){
+  void initState() {
     super.initState();
 
     requestPermission();
-
   }
 
   // Dispose to stop listeners when leaving widget
   @override
-  void dispose() async{
+  void dispose() async {
     mapController.dispose();
     listen.cancel();
     super.dispose();
@@ -82,6 +82,7 @@ class _GmapsState extends State<Gmaps> {
     _location.onLocationChanged.listen((event) {
       setState(() {
         bikeLoc.forEach((key, value) {
+
           var space1 = distance.as(lt.LengthUnit.Meter,
             lt.LatLng(event.latitude??00.0,event.longitude??00.00),
             lt.LatLng(value.latitude,value.longitude));
@@ -89,6 +90,7 @@ class _GmapsState extends State<Gmaps> {
             closePoint[key] = space1 < 10;
         }
             );
+
       });
     });
     return _currPosition;
@@ -98,6 +100,7 @@ class _GmapsState extends State<Gmaps> {
     if(meters< 1000){
       double distance = meters * 3.281;
       return "${distance.toStringAsFixed(2)} ft";
+
 
     } else{
       double distance = meters / 1609;
@@ -121,44 +124,61 @@ class _GmapsState extends State<Gmaps> {
     // Calls firestore and gets bike info
     FirebaseFirestore.instance.collection('bikes').get()
         .then((docs) {
+
       docs.docs.forEach((element) {
         initMarker(element);
       });
     });
 
-  setState(() { _markers;
-
-  });
+    setState(() {
+      _markers;
+    });
   }
 
-  initMarker(bike){
+  initMarker(bike) {
     // Set state need to update markers on Gmap
     // Set state handled with location update.
 
-      var rating = bike['rating'];
-      var hue = BitmapDescriptor.hueAzure;
+    var rating = bike['rating'];
+    var hue = BitmapDescriptor.hueAzure;
 
-      // Changes the color of the icon based on the rating
-      switch(rating){
-        case 5:{hue = BitmapDescriptor.hueGreen;}
+    // Changes the color of the icon based on the rating
+    switch (rating) {
+      case 5:
+        {
+          hue = BitmapDescriptor.hueGreen;
+        }
         break;
-        case 4:{hue = BitmapDescriptor.hueAzure;}
+      case 4:
+        {
+          hue = BitmapDescriptor.hueAzure;
+        }
         break;
-        case 3:{hue = BitmapDescriptor.hueOrange;}
+      case 3:
+        {
+          hue = BitmapDescriptor.hueOrange;
+        }
         break;
-        case 2:{hue = BitmapDescriptor.hueYellow;}
+      case 2:
+        {
+          hue = BitmapDescriptor.hueYellow;
+        }
         break;
-        case 1: {hue = BitmapDescriptor.hueRed;}
+      case 1:
+        {
+          hue = BitmapDescriptor.hueRed;
+        }
         break;
-        default:{}
+      default:
+        {}
         break;
-      }
+    }
 
     _markers.add(Marker(
         markerId: MarkerId(bike['make']),
-        position: LatLng(bike['location'].latitude,
-            bike['location'].longitude),
+        position: LatLng(bike['location'].latitude, bike['location'].longitude),
         infoWindow: InfoWindow(title: bike['model']),
+
         icon: BitmapDescriptor.defaultMarkerWithHue(hue)
         
     ));
@@ -350,11 +370,13 @@ class _GmapsState extends State<Gmaps> {
     );
   }
   
+
   @override
   Widget build(BuildContext context) {
-  currLocation();
+    currLocation();
     return Scaffold(
       resizeToAvoidBottomInset: false,
+
       appBar: AppBar(title: const Text("Bike Kollective"),),
       // bottomNavigationBar: NavBar(),
       body: Stack(
@@ -365,6 +387,7 @@ class _GmapsState extends State<Gmaps> {
           //Bike List Widget
           Bikelist(),
           zoomButtons(),
+
         ],
       ),
     );
@@ -380,15 +403,16 @@ class RatingStar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(10.0),
-      child: Row( children:
-        List.generate(5,(index) {
-        return(Icon(index >= rating ? Icons.star_border  :Icons.star,
+      child: Row(
+          children: List.generate(5, (index) {
+        return (Icon(index >= rating ? Icons.star_border : Icons.star,
             color: index >= rating ? Colors.yellow : Colors.yellow));
-      })
-        ),
+      })),
     );
   }
 }
+
+
 
 
 

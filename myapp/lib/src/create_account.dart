@@ -3,9 +3,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:bike_kollective/src_exports.dart';
 
 class CreateAccountPage extends StatefulWidget {
-  const CreateAccountPage({Key? key, required this.title}) : super(key: key);
-
-  final String title;
+  CreateAccountPage({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<CreateAccountPage> createState() => _CreateAccountState();
@@ -19,7 +19,7 @@ class _CreateAccountState extends State<CreateAccountPage> {
         appBar: AppBar(
           title: Center(child: Text("Create Account")),
         ),
-        bottomNavigationBar: NavBar.navBar(),
+        //bottomNavigationBar: NavBar.navBar(),
         body: Center(
           child: ListView(
             children: <Widget>[

@@ -6,3 +6,4 @@ export 'src/gmaps.dart';
 export 'src/create_account.dart';
 export 'src/constants.dart';
 export 'src/authentication.dart';
+export 'src/account.dart';
