@@ -1,22 +1,3 @@
-<<<<<<< HEAD
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.cs467.bikekollective">
-
-    // Permissions for location and internet access
-    <uses-permission
-        android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission
-        android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.INTERNET"/>
-
-   <application
-        android:label="Bike Kollective"
-        android:name="${applicationName}"
-        android:icon="@mipmap/flutter_icon"
-        android:usesCleartextTraffic="true">
-
-       //API KEY for Google Maps
-=======
 <manifest
     xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.cs467.bikekollective">
@@ -34,7 +15,6 @@
         android:usesCleartextTraffic="true">
 
 
->>>>>>> origin/main
        <meta-data android:name="com.google.android.geo.API_KEY"
            android:value="AIzaSyCzouy7d_VdcpHarqsE0tdMSqJqf1kQCW8"/>
 
