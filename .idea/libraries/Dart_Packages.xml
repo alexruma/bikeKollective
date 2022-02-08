@@ -2,6 +2,8 @@
   <library name="Dart Packages" type="DartPackagesLibraryType">
     <properties>
       <option name="packageNameToDirsMap">
+<<<<<<< HEAD
+=======
         <entry key="args">
           <value>
             <list>
@@ -9,6 +11,7 @@
             </list>
           </value>
         </entry>
+>>>>>>> origin/main
         <entry key="async">
           <value>
             <list>
@@ -47,21 +50,33 @@
         <entry key="cloud_firestore">
           <value>
             <list>
+<<<<<<< HEAD
+              <option value="$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/cloud_firestore-3.1.6/lib" />
+=======
               <option value="$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/cloud_firestore-3.1.7/lib" />
+>>>>>>> origin/main
             </list>
           </value>
         </entry>
         <entry key="cloud_firestore_platform_interface">
           <value>
             <list>
+<<<<<<< HEAD
+              <option value="$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/cloud_firestore_platform_interface-5.4.11/lib" />
+=======
               <option value="$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/cloud_firestore_platform_interface-5.4.12/lib" />
+>>>>>>> origin/main
             </list>
           </value>
         </entry>
         <entry key="cloud_firestore_web">
           <value>
             <list>
+<<<<<<< HEAD
+              <option value="$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/cloud_firestore_web-2.6.6/lib" />
+=======
               <option value="$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/cloud_firestore_web-2.6.7/lib" />
+>>>>>>> origin/main
             </list>
           </value>
         </entry>
@@ -72,6 +87,8 @@
             </list>
           </value>
         </entry>
+<<<<<<< HEAD
+=======
         <entry key="crypto">
           <value>
             <list>
@@ -79,6 +96,7 @@
             </list>
           </value>
         </entry>
+>>>>>>> origin/main
         <entry key="cupertino_icons">
           <value>
             <list>
@@ -86,6 +104,8 @@
             </list>
           </value>
         </entry>
+<<<<<<< HEAD
+=======
         <entry key="desktop_webview_auth">
           <value>
             <list>
@@ -107,6 +127,7 @@
             </list>
           </value>
         </entry>
+>>>>>>> origin/main
         <entry key="fake_async">
           <value>
             <list>
@@ -114,6 +135,12 @@
             </list>
           </value>
         </entry>
+<<<<<<< HEAD
+        <entry key="firebase_analytics">
+          <value>
+            <list>
+              <option value="$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_analytics-9.0.5/lib" />
+=======
         <entry key="ffi">
           <value>
             <list>
@@ -132,61 +159,93 @@
           <value>
             <list>
               <option value="$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_analytics-9.1.0/lib" />
+>>>>>>> origin/main
             </list>
           </value>
         </entry>
         <entry key="firebase_analytics_platform_interface">
           <value>
             <list>
+<<<<<<< HEAD
+              <option value="$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_analytics_platform_interface-3.0.4/lib" />
+=======
               <option value="$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_analytics_platform_interface-3.0.5/lib" />
+>>>>>>> origin/main
             </list>
           </value>
         </entry>
         <entry key="firebase_analytics_web">
           <value>
             <list>
+<<<<<<< HEAD
+              <option value="$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_analytics_web-0.4.0+5/lib" />
+=======
               <option value="$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_analytics_web-0.4.0+6/lib" />
+>>>>>>> origin/main
             </list>
           </value>
         </entry>
         <entry key="firebase_auth">
           <value>
             <list>
+<<<<<<< HEAD
+              <option value="$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_auth-3.3.5/lib" />
+=======
               <option value="$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_auth-3.3.6/lib" />
+>>>>>>> origin/main
             </list>
           </value>
         </entry>
         <entry key="firebase_auth_platform_interface">
           <value>
             <list>
+<<<<<<< HEAD
+              <option value="$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_auth_platform_interface-6.1.10/lib" />
+=======
               <option value="$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_auth_platform_interface-6.1.11/lib" />
+>>>>>>> origin/main
             </list>
           </value>
         </entry>
         <entry key="firebase_auth_web">
           <value>
             <list>
+<<<<<<< HEAD
+              <option value="$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_auth_web-3.3.6/lib" />
+=======
               <option value="$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_auth_web-3.3.7/lib" />
+>>>>>>> origin/main
             </list>
           </value>
         </entry>
         <entry key="firebase_core">
           <value>
             <list>
+<<<<<<< HEAD
+              <option value="$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_core-1.11.0/lib" />
+=======
               <option value="$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_core-1.12.0/lib" />
+>>>>>>> origin/main
             </list>
           </value>
         </entry>
         <entry key="firebase_core_platform_interface">
           <value>
             <list>
+<<<<<<< HEAD
+              <option value="$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_core_platform_interface-4.2.3/lib" />
+=======
               <option value="$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_core_platform_interface-4.2.4/lib" />
+>>>>>>> origin/main
             </list>
           </value>
         </entry>
         <entry key="firebase_core_web">
           <value>
             <list>
+<<<<<<< HEAD
+              <option value="$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_core_web-1.5.3/lib" />
+=======
               <option value="$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_core_web-1.5.4/lib" />
             </list>
           </value>
@@ -251,6 +310,7 @@
           <value>
             <list>
               <option value="$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_storage_web-3.2.7/lib" />
+>>>>>>> origin/main
             </list>
           </value>
         </entry>
@@ -261,6 +321,8 @@
             </list>
           </value>
         </entry>
+<<<<<<< HEAD
+=======
         <entry key="flutter_facebook_auth">
           <value>
             <list>
@@ -282,6 +344,7 @@
             </list>
           </value>
         </entry>
+>>>>>>> origin/main
         <entry key="flutter_lints">
           <value>
             <list>
@@ -289,6 +352,8 @@
             </list>
           </value>
         </entry>
+<<<<<<< HEAD
+=======
         <entry key="flutter_localizations">
           <value>
             <list>
@@ -296,6 +361,7 @@
             </list>
           </value>
         </entry>
+>>>>>>> origin/main
         <entry key="flutter_plugin_android_lifecycle">
           <value>
             <list>
@@ -303,6 +369,8 @@
             </list>
           </value>
         </entry>
+<<<<<<< HEAD
+=======
         <entry key="flutter_svg">
           <value>
             <list>
@@ -310,6 +378,7 @@
             </list>
           </value>
         </entry>
+>>>>>>> origin/main
         <entry key="flutter_test">
           <value>
             <list>
@@ -324,6 +393,8 @@
             </list>
           </value>
         </entry>
+<<<<<<< HEAD
+=======
         <entry key="flutterfire_ui">
           <value>
             <list>
@@ -338,6 +409,7 @@
             </list>
           </value>
         </entry>
+>>>>>>> origin/main
         <entry key="google_maps_flutter">
           <value>
             <list>
@@ -352,6 +424,8 @@
             </list>
           </value>
         </entry>
+<<<<<<< HEAD
+=======
         <entry key="google_sign_in">
           <value>
             <list>
@@ -373,6 +447,7 @@
             </list>
           </value>
         </entry>
+>>>>>>> origin/main
         <entry key="http">
           <value>
             <list>
@@ -443,6 +518,8 @@
             </list>
           </value>
         </entry>
+<<<<<<< HEAD
+=======
         <entry key="material_color_utilities">
           <value>
             <list>
@@ -450,6 +527,7 @@
             </list>
           </value>
         </entry>
+>>>>>>> origin/main
         <entry key="meta">
           <value>
             <list>
@@ -464,6 +542,8 @@
             </list>
           </value>
         </entry>
+<<<<<<< HEAD
+=======
         <entry key="path_drawing">
           <value>
             <list>
@@ -534,6 +614,7 @@
             </list>
           </value>
         </entry>
+>>>>>>> origin/main
         <entry key="permission_handler">
           <value>
             <list>
@@ -548,6 +629,8 @@
             </list>
           </value>
         </entry>
+<<<<<<< HEAD
+=======
         <entry key="petitparser">
           <value>
             <list>
@@ -562,6 +645,7 @@
             </list>
           </value>
         </entry>
+>>>>>>> origin/main
         <entry key="plugin_platform_interface">
           <value>
             <list>
@@ -569,6 +653,8 @@
             </list>
           </value>
         </entry>
+<<<<<<< HEAD
+=======
         <entry key="process">
           <value>
             <list>
@@ -604,6 +690,7 @@
             </list>
           </value>
         </entry>
+>>>>>>> origin/main
         <entry key="sky_engine">
           <value>
             <list>
@@ -618,6 +705,8 @@
             </list>
           </value>
         </entry>
+<<<<<<< HEAD
+=======
         <entry key="sqflite">
           <value>
             <list>
@@ -632,6 +721,7 @@
             </list>
           </value>
         </entry>
+>>>>>>> origin/main
         <entry key="stack_trace">
           <value>
             <list>
@@ -660,6 +750,8 @@
             </list>
           </value>
         </entry>
+<<<<<<< HEAD
+=======
         <entry key="synchronized">
           <value>
             <list>
@@ -667,6 +759,7 @@
             </list>
           </value>
         </entry>
+>>>>>>> origin/main
         <entry key="term_glyph">
           <value>
             <list>
@@ -677,6 +770,9 @@
         <entry key="test_api">
           <value>
             <list>
+<<<<<<< HEAD
+              <option value="$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/test_api-0.4.3/lib" />
+=======
               <option value="$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/test_api-0.4.8/lib" />
             </list>
           </value>
@@ -685,6 +781,7 @@
           <value>
             <list>
               <option value="$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/twitter_login-4.0.1/lib" />
+>>>>>>> origin/main
             </list>
           </value>
         </entry>
@@ -702,6 +799,11 @@
             </list>
           </value>
         </entry>
+<<<<<<< HEAD
+      </option>
+    </properties>
+    <CLASSES>
+=======
         <entry key="win32">
           <value>
             <list>
@@ -727,11 +829,33 @@
     </properties>
     <CLASSES>
       <root url="file://$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/args-2.3.0/lib" />
+>>>>>>> origin/main
       <root url="file://$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/async-2.8.2/lib" />
       <root url="file://$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/boolean_selector-2.1.0/lib" />
       <root url="file://$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/characters-1.2.0/lib" />
       <root url="file://$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/charcode-1.3.1/lib" />
       <root url="file://$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/clock-1.1.0/lib" />
+<<<<<<< HEAD
+      <root url="file://$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/cloud_firestore-3.1.6/lib" />
+      <root url="file://$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/cloud_firestore_platform_interface-5.4.11/lib" />
+      <root url="file://$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/cloud_firestore_web-2.6.6/lib" />
+      <root url="file://$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/collection-1.15.0/lib" />
+      <root url="file://$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/cupertino_icons-1.0.4/lib" />
+      <root url="file://$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/fake_async-1.2.0/lib" />
+      <root url="file://$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_analytics-9.0.5/lib" />
+      <root url="file://$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_analytics_platform_interface-3.0.4/lib" />
+      <root url="file://$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_analytics_web-0.4.0+5/lib" />
+      <root url="file://$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_auth-3.3.5/lib" />
+      <root url="file://$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_auth_platform_interface-6.1.10/lib" />
+      <root url="file://$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_auth_web-3.3.6/lib" />
+      <root url="file://$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_core-1.11.0/lib" />
+      <root url="file://$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_core_platform_interface-4.2.3/lib" />
+      <root url="file://$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_core_web-1.5.3/lib" />
+      <root url="file://$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_lints-1.0.4/lib" />
+      <root url="file://$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_plugin_android_lifecycle-2.0.5/lib" />
+      <root url="file://$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/google_maps_flutter-2.1.1/lib" />
+      <root url="file://$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/google_maps_flutter_platform_interface-2.1.5/lib" />
+=======
       <root url="file://$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/cloud_firestore-3.1.7/lib" />
       <root url="file://$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/cloud_firestore_platform_interface-5.4.12/lib" />
       <root url="file://$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/cloud_firestore_web-2.6.7/lib" />
@@ -775,6 +899,7 @@
       <root url="file://$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/google_sign_in-5.2.3/lib" />
       <root url="file://$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/google_sign_in_platform_interface-2.1.1/lib" />
       <root url="file://$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/google_sign_in_web-0.10.0+4/lib" />
+>>>>>>> origin/main
       <root url="file://$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/http-0.13.4/lib" />
       <root url="file://$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/http_parser-4.0.0/lib" />
       <root url="file://$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/intl-0.17.0/lib" />
@@ -785,6 +910,14 @@
       <root url="file://$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/location_platform_interface-2.3.0/lib" />
       <root url="file://$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/location_web-3.1.1/lib" />
       <root url="file://$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/matcher-0.12.11/lib" />
+<<<<<<< HEAD
+      <root url="file://$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/meta-1.7.0/lib" />
+      <root url="file://$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/path-1.8.0/lib" />
+      <root url="file://$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/permission_handler-8.3.0/lib" />
+      <root url="file://$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/permission_handler_platform_interface-3.7.0/lib" />
+      <root url="file://$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/plugin_platform_interface-2.1.2/lib" />
+      <root url="file://$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/source_span-1.8.1/lib" />
+=======
       <root url="file://$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/material_color_utilities-0.1.3/lib" />
       <root url="file://$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/meta-1.7.0/lib" />
       <root url="file://$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/path-1.8.0/lib" />
@@ -811,10 +944,19 @@
       <root url="file://$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/source_span-1.8.1/lib" />
       <root url="file://$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/sqflite-2.0.2/lib" />
       <root url="file://$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/sqflite_common-2.2.0/lib" />
+>>>>>>> origin/main
       <root url="file://$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/stack_trace-1.10.0/lib" />
       <root url="file://$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/stream_channel-2.1.0/lib" />
       <root url="file://$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/stream_transform-2.0.0/lib" />
       <root url="file://$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/string_scanner-1.1.0/lib" />
+<<<<<<< HEAD
+      <root url="file://$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/term_glyph-1.2.0/lib" />
+      <root url="file://$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/test_api-0.4.3/lib" />
+      <root url="file://$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/typed_data-1.3.0/lib" />
+      <root url="file://$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/vector_math-2.1.1/lib" />
+      <root url="file://$USER_HOME$/flutter/bin/cache/pkg/sky_engine/lib" />
+      <root url="file://$USER_HOME$/flutter/packages/flutter/lib" />
+=======
       <root url="file://$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/synchronized-3.0.0/lib" />
       <root url="file://$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/term_glyph-1.2.0/lib" />
       <root url="file://$USER_HOME$/flutter/.pub-cache/hosted/pub.dartlang.org/test_api-0.4.8/lib" />
@@ -827,6 +969,7 @@
       <root url="file://$USER_HOME$/flutter/bin/cache/pkg/sky_engine/lib" />
       <root url="file://$USER_HOME$/flutter/packages/flutter/lib" />
       <root url="file://$USER_HOME$/flutter/packages/flutter_localizations/lib" />
+>>>>>>> origin/main
       <root url="file://$USER_HOME$/flutter/packages/flutter_test/lib" />
       <root url="file://$USER_HOME$/flutter/packages/flutter_web_plugins/lib" />
     </CLASSES>
