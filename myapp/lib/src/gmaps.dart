@@ -80,7 +80,7 @@ class _GmapsState extends State<Gmaps> {
     var _currPosition = await _location.getLocation();
     const lt.Distance distance = lt.Distance();
     _location.onLocationChanged.listen((event) {
-      setState(() {
+      if(this.mounted){ setState(() {
         bikeLoc.forEach((key, value) {
 
           var space1 = distance.as(lt.LengthUnit.Meter,
@@ -91,7 +91,7 @@ class _GmapsState extends State<Gmaps> {
         }
             );
 
-      });
+      });};
     });
     return _currPosition;
   }
@@ -377,7 +377,7 @@ class _GmapsState extends State<Gmaps> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
 
-      appBar: AppBar(title: const Text("Bike Kollective"),),
+      //appBar: AppBar(title: const Text("Bike Kollective"),),
       // bottomNavigationBar: NavBar(),
       body: Stack(
         //mainAxisAlignment: MainAxisAlignment.spaceBetween,
