@@ -1,12 +1,13 @@
 import 'package:bike_kollective/src/account.dart';
+import 'package:bike_kollective/src/bikes.dart';
 import 'package:flutter/material.dart';
 import 'package:bike_kollective/src_exports.dart';
 import 'package:flutterfire_ui/auth.dart';
 
 class NavBarPage extends StatefulWidget {
-  const NavBarPage({Key? key, required this.title}) : super(key: key);
-
-  final String title;
+  const NavBarPage({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<NavBarPage> createState() => _NavBarPageState();
@@ -25,15 +26,13 @@ class _NavBarPageState extends State<NavBarPage> {
 
   final List<Widget> _pages = [
     Gmaps(),
-    Gmaps(),
     MyHomePage(title: "Home"),
-    AuthGate(),
+    BikeGrid(),
     AccountPage()
   ];
 
   final List<String> _titles = const [
     "Bike Kollective",
-    "Bike Map",
     "Bike Search",
     "Bike List",
     "My Account"
@@ -56,10 +55,6 @@ class _NavBarPageState extends State<NavBarPage> {
         type: BottomNavigationBarType.fixed,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
             icon: Icon(Icons.location_pin),
             label: 'Map',
           ),
@@ -69,7 +64,7 @@ class _NavBarPageState extends State<NavBarPage> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.directions_bike),
-            label: 'Current Bike',
+            label: 'Bike List',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.account_box),

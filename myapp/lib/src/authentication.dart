@@ -2,37 +2,32 @@ import 'package:flutter/material.dart';
 import 'package:flutterfire_ui/auth.dart';
 
 class SignIn extends StatelessWidget {
-
   final List<ProviderConfiguration> providerConfigs;
 
-  const SignIn({ Key? key, required this.providerConfigs}) : super(key: key);
+  const SignIn({Key? key, required this.providerConfigs}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return SignInScreen(
       subtitleBuilder: (context, action) {
         return Padding(
-          padding: const EdgeInsets.only(bottom: 8),
-          child: Text(
-            action == AuthAction.signIn
-              ? 'Please sign in to continue.'
-              : 'Please create an account to use the app.'
-          )
-        );
+            padding: const EdgeInsets.only(bottom: 8),
+            child: Text(action == AuthAction.signIn
+                ? 'Please sign in to continue.'
+                : 'Please create an account to use the app.'));
       },
       headerBuilder: (context, constraints, _) {
         return Padding(
-          padding: const EdgeInsets.all(10),
-          child: AspectRatio(
-            aspectRatio: 1,
-            child: Image.asset('assets/images/rider-bike-icon.png'),
-          )
-        );
+            padding: const EdgeInsets.all(10),
+            child: AspectRatio(
+              aspectRatio: 1,
+              child: Image.asset('assets/images/rider-bike-icon.png'),
+            ));
       },
       providerConfigs: providerConfigs,
       actions: [
         AuthStateChangeAction<SignedIn>((context, _) {
-          Navigator.of(context).pushReplacementNamed('/profile');
+          Navigator.of(context).pushReplacementNamed('/home');
         }),
         ForgotPasswordAction((context, email) {
           Navigator.of(context).pushNamed(
@@ -45,22 +40,20 @@ class SignIn extends StatelessWidget {
   }
 }
 
-
-
 class BKForgotPassword extends StatelessWidget {
-  const BKForgotPassword({ Key? key }) : super(key: key);
+  const BKForgotPassword({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ForgotPasswordScreen(
-      headerBuilder:(context, constraints, shrinkOffset) {
+      headerBuilder: (context, constraints, shrinkOffset) {
         return Padding(
           padding: const EdgeInsets.all(20).copyWith(top: 40),
           child: AspectRatio(
-            aspectRatio: 1,
-            child: Image.asset('assets/images/rider-bike-icon.png')),
+              aspectRatio: 1,
+              child: Image.asset('assets/images/rider-bike-icon.png')),
         );
-      },      
+      },
     );
   }
 }

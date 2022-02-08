@@ -34,7 +34,7 @@ class _MyAppState extends State<MyApp> {
                   textStyle: const TextStyle(
             fontSize: 42,
           )))),
-      home: const NavBarPage(title: "Nav"),
+      home: const AuthGate(),
     );
   }
 }
