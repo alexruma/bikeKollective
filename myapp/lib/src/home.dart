@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+<<<<<<< HEAD
 import 'package:bike_kollective/src_exports.dart';
 import 'navbar.dart';
+=======
+>>>>>>> origin/main
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key, required this.title}) : super(key: key);
 
+<<<<<<< HEAD
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
   // how it looks.
@@ -14,6 +18,8 @@ class MyHomePage extends StatefulWidget {
   // used by the build method of the State. Fields in a Widget subclass are
   // always marked "final".
 
+=======
+>>>>>>> origin/main
   final String title;
 
   @override
@@ -25,17 +31,21 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _incrementCounter() {
     setState(() {
+<<<<<<< HEAD
       // This call to setState tells the Flutter framework that something has
       // changed in this State, which causes it to rerun the build method below
       // so that the display can reflect the updated values. If we changed
       // _counter without calling setState(), then the build method would not be
       // called again, and so nothing would appear to happen.
+=======
+>>>>>>> origin/main
       _counter++;
     });
   }
 
   @override
   Widget build(BuildContext context) {
+<<<<<<< HEAD
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
@@ -74,6 +84,23 @@ class _MyHomePageState extends State<MyHomePage> {
           // center the children vertically; the main axis here is the vertical
           // axis because Columns are vertical (the cross axis would be
           // horizontal).
+=======
+    return Scaffold(
+      // appBar: AppBar(
+
+      //   title: Row(children: [
+      //     Center(child: Text(widget.title)),
+      //     Image.asset(
+      //       'assets/images/bike-icon.png',
+      //       height: 85,
+      //       width: 85,
+      //     ),
+      //   ]),
+      // ),
+      //bottomNavigationBar: MyHomePage.navBar(),
+      body: Center(
+        child: Column(
+>>>>>>> origin/main
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             const Text(

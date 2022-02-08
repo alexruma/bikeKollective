@@ -1,3 +1,9 @@
 export 'src/gmaps.dart';
 export 'src/home.dart';
-export 'src/bikes.dart';
+export 'src/login_page.dart';
+export 'src/navbar.dart';
+export 'src/gmaps.dart';
+export 'src/create_account.dart';
+export 'src/constants.dart';
+export 'src/authentication.dart';
+export 'src/account.dart';

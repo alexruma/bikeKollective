@@ -42,12 +42,15 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.4
   permission_handler: ^8.3.0
-  firebase_core: ^1.11.0
-  firebase_auth: ^3.3.5
-  cloud_firestore: ^3.1.6
-  firebase_analytics: ^9.0.5
-
-
+  firebase_core: ^1.12.0
+  firebase_auth: ^3.3.3
+  cloud_firestore: ^3.1.7
+  firebase_analytics: ^9.1.0
+  flutterfire_ui: ^0.3.2
+  google_sign_in: ^5.2.3
+  dotenv: ^3.0.0
+  firebase_storage: ^10.2.6
+  firebase_image: ^1.1.1
 
 
 dev_dependencies:
@@ -80,6 +83,8 @@ flutter:
       - assets/images/bike-icon.png
       - assets/images/spoke-bike.jpg
       - assets/images/rider-bike-icon.png
+      - assets/images/btn_google_signin_dark_normal_web.png
+      - assets/images/alex.jpg
       
   #   - images/a_dot_ham.jpeg
 
