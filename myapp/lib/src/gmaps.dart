@@ -1,3 +1,4 @@
+
 import 'package:bike_kollective/models/bike_model.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -8,6 +9,8 @@ import 'constants.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:latlong2/latlong.dart' as lt;
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:firebase_image/firebase_image.dart';
 
 class Gmaps extends StatefulWidget {
   const Gmaps({Key? key}) : super(key: key);
@@ -21,30 +24,35 @@ class _GmapsState extends State<Gmaps> {
   final Location _location = Location();
   late var listen = _location.onLocationChanged.listen((event) {});
 
-  //Dictionary of distance from user
+  //Dictionary of distance from user True or False if close enough
   Map<String, bool> closePoint = {};
 
+  // Dictionary of distance from user to bike
+  Map<String, dynamic> bikeDistance = {};
   // Dictionary of bike locations
   Map<String, GeoPoint> bikeLoc = {};
 
   late GoogleMapController mapController;
   final List<Marker> _markers = <Marker>[];
 
-  final Stream<QuerySnapshot> bikes = FirebaseFirestore.instance
-      .collection('bikes')
-      .withConverter<Bikes>(
-          fromFirestore: (snapshot, _) => Bikes.fromFS(snapshot.data()!),
-          toFirestore: (bikes, _) => bikes.toJson())
-      .snapshots();
+
+
+  final Stream<QuerySnapshot> bikes = FirebaseFirestore.instance.collection('bikes').snapshots();
+
+
 
   // Starting position of the map
   // Location is Oregon state university
   final LatLng _center = const LatLng(44.56457554667605, -123.27994855698064);
 
+
+  bool UserCheckout = true;
   // Function to ask permission for location
-  Future<void> requestPermission() async {
-    await Permission.location.request();
-  }
+
+  Future<void> requestPermission() async { await Permission.location.request();
+  setState(() {
+  });}
+
 
   // Startup tasks when map is created
   void _onMapCreated(GoogleMapController controller) {
@@ -70,42 +78,54 @@ class _GmapsState extends State<Gmaps> {
 
   currLocation() async {
     var _currPosition = await _location.getLocation();
-    final lt.Distance distance = lt.Distance();
+    const lt.Distance distance = lt.Distance();
     _location.onLocationChanged.listen((event) {
       setState(() {
         bikeLoc.forEach((key, value) {
-          var space1 = distance.as(
-              lt.LengthUnit.Meter,
-              lt.LatLng(event.latitude ?? 00.0, event.longitude ?? 00.00),
-              lt.LatLng(value.latitude, value.longitude));
-          closePoint[key] = space1 < 10;
-        });
+
+          var space1 = distance.as(lt.LengthUnit.Meter,
+            lt.LatLng(event.latitude??00.0,event.longitude??00.00),
+            lt.LatLng(value.latitude,value.longitude));
+            bikeDistance[key] = space1;
+            closePoint[key] = space1 < 10;
+        }
+            );
+
       });
     });
     return _currPosition;
   }
 
-  // double closeDistance(location, curr) {
-  //
-  //
-  //   final lt.Distance distance = lt.Distance();
-  //   var space1 = distance.as(lt.LengthUnit.Meter,
-  //       lt.LatLng(curr.latitude??0.00,curr.longitude??00.00),
-  //       lt.LatLng(location.latitude, location.longitude));
-  //
-  //   print(space1);
-  //   print("${curr.latitude}, ${curr.latitude}");
-  //   print("${location.latitude}, ${location.longitude}");
-  //   return space1;
-  // }
+  String distanceConv(meters){
+    if(meters< 1000){
+      double distance = meters * 3.281;
+      return "${distance.toStringAsFixed(2)} ft";
+
+
+    } else{
+      double distance = meters / 1609;
+
+      return "${distance.toStringAsFixed(2)} miles";
+    }
+
+  }
+
+  Widget bikeFromUser(data){
+    // Gets bike id key and returns distance from user
+    return Row(children: [
+      const Text("Distance: ", style: TextStyle(fontWeight: FontWeight.bold),),
+      Text(distanceConv(bikeDistance[data])),
+    ],);
+
+  }
 
   createMarkers() async {
     //Markers for Bike available Locations
     // Calls firestore and gets bike info
+    FirebaseFirestore.instance.collection('bikes').get()
+        .then((docs) {
 
-    FirebaseFirestore.instance.collection('bikes').get().then((docs) {
       docs.docs.forEach((element) {
-        //print(element['make']);
         initMarker(element);
       });
     });
@@ -158,126 +178,216 @@ class _GmapsState extends State<Gmaps> {
         markerId: MarkerId(bike['make']),
         position: LatLng(bike['location'].latitude, bike['location'].longitude),
         infoWindow: InfoWindow(title: bike['model']),
-        icon: BitmapDescriptor.defaultMarkerWithHue(hue)));
+
+        icon: BitmapDescriptor.defaultMarkerWithHue(hue)
+        
+    ));
+
   }
+
+  moveCamera(location)async{
+    double curZoom = await mapController.getZoomLevel();
+    mapController.animateCamera(CameraUpdate.newCameraPosition(
+        CameraPosition(target: LatLng(location.latitude, location.longitude),
+            zoom: curZoom)));
+  }
+  Future<void> downloadURLExample(image) async {
+    String downloadURL = await firebase_storage.FirebaseStorage.instance
+        .ref('bikes'+image)
+        .getDownloadURL();
+
+    //Still need Image.network(downloadURL)
+  }
+  
+  Widget zoomButtons(){
+    return Align(
+      alignment: Alignment.topLeft,
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Container(
+            height: 80,
+            width: 40,
+            decoration: BoxDecoration(color: Colors.white.withOpacity(.45),
+            border: Border.all(color:Colors.black.withOpacity(.45))),
+            child: Column(children: [
+              FittedBox(
+                fit: BoxFit.contain,
+                child:
+                  Container(
+                    decoration: BoxDecoration(border:
+                    Border(bottom: BorderSide(color:Colors.black.withOpacity(.45)))),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: GestureDetector(onTap: (){
+                        mapController.animateCamera(CameraUpdate.zoomIn());
+                      },
+                        child: const Icon(Icons.add,
+                        color: Colors.blueAccent),
+                      ),
+                    ),
+                  ),
+              ),
+              FittedBox(
+                fit: BoxFit.contain,
+                child:
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: GestureDetector(onTap: (){
+                      mapController.animateCamera(CameraUpdate.zoomOut());
+                    },
+                      child: const Icon(Icons.remove,
+                          color: Colors.blue),
+                    ),
+                  ),
+
+              )
+            ],),),
+        ));
+  }
+
+  Widget _GoogleMap(BuildContext context){
+    return GoogleMap(
+      onMapCreated: _onMapCreated,
+      myLocationEnabled: true,
+      myLocationButtonEnabled: true,
+      zoomControlsEnabled: false,
+      initialCameraPosition:
+      CameraPosition(target: _center, zoom: 16),
+      markers: Set<Marker>.of(_markers),
+    );
+  }
+  
+  Widget cardImage(image){
+    if(image == ""){
+      return const Image(image: AssetImage('assets/images/bike-icon.png'),
+        width: 200,
+        height: 100
+        ,);
+    } else{
+      return Image(image: FirebaseImage(image),
+        width: 200,
+        height: 100
+        ,);
+    }
+  }
+  Widget Bikelist(){
+    return Align(
+      alignment: Alignment.bottomLeft,
+      child: Container(
+          height: 275,
+          child:
+          StreamBuilder<QuerySnapshot>(stream: bikes,
+              builder: (BuildContext context,
+                  AsyncSnapshot<QuerySnapshot> snapshot){
+                if (snapshot.hasError){
+                  return const Text('Something went wrong.');}
+                if (snapshot.connectionState == ConnectionState.waiting){
+                  return const Text('Loading');
+                }
+                final data = snapshot.requireData;
+                var items = snapshot.data?.docs;
+                //Bikes added to dictionary
+                //Updated through location update
+                items?.forEach((bike) {initMarker(bike);});
+
+                //if (UserCheckout == true){print("HERE");}
+                //List builder for bike list
+                return ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    shrinkWrap: true,
+                    itemCount: data.size,
+                    itemBuilder: (context, index){
+                      bikeLoc[data.docs[index].id] = data.docs[index]['location'];
+                      return
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: FittedBox(
+                            fit: BoxFit.contain,
+                            child: GestureDetector(
+                              onTap: (){moveCamera(data.docs[index]['location']);},
+                              child: Container(
+                                  decoration: BoxDecoration(borderRadius: const BorderRadius.all(Radius.circular(20)),
+                                    border: Border.all(color: Colors.black12),
+                                    color: Colors.grey.withOpacity(.95),),
+                                  width: 275,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [ Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children:  [
+                                          cardImage(data.docs[index]['image'])
+                                        ]),
+                                      Row(mainAxisAlignment: MainAxisAlignment.center,
+                                          children:[ RatingStar(rating: data.docs[index]['rating']),],
+                                      ),
+                                      if(bikeDistance.containsKey(data.docs[index].id))
+                                        bikeFromUser(data.docs[index].id),
+
+                                      Row(children:[
+                                        const Text("Type: ",style: TextStyle(fontWeight: FontWeight.bold),),
+                                        Text("${data.docs[index]['category']}"),
+                                        const Text(" Year: ",style: TextStyle(fontWeight: FontWeight.bold),),
+                                        Text("${data.docs[index]['year']}"),
+                                        const Text(" Condition: ",style: TextStyle(fontWeight: FontWeight.bold),),
+                                        Text("${data.docs[index]['condition']}")]),
+                                      Row(children: [
+                                        const Text("Make: ",style: TextStyle(fontWeight: FontWeight.bold),),
+                                        Text('${data.docs[index]['make']}'),
+                                        const Text(" Model: ",style: TextStyle(fontWeight: FontWeight.bold),),
+                                        Text('${data.docs[index]['model']}')
+                                      ],),
+
+                                      Row(children: [
+                                        const Text("Tags: ",style: TextStyle(fontWeight: FontWeight.bold),),
+                                        Text("${data.docs[index]['tags']}",
+                                          overflow: TextOverflow.fade,)
+                                      ],),
+                                      Padding(
+                                        padding: const EdgeInsets.all(1.0),
+                                        child: Row(
+                                          children: [
+                                            ElevatedButton(style: const ButtonStyle(),
+                                              onPressed: () {  },
+                                              child: const Text('View Bike',
+                                                style: TextStyle(color: Colors.black87),),),
+
+                                            // Will be used to select bike if within distance
+                                            if(closePoint[data.docs[index].id]??false)
+                                              ElevatedButton(onPressed: (){}, child:
+                                              const Text('Select Bike',
+                                                style: TextStyle(color: Colors.black54),))
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                              ),
+                            ),
+                          ),
+                        );
+                    });
+              })),
+    );
+  }
+  
 
   @override
   Widget build(BuildContext context) {
     currLocation();
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      //appBar: AppBar(title: const Text("Bike Kollective"),),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
+      appBar: AppBar(title: const Text("Bike Kollective"),),
+      // bottomNavigationBar: NavBar(),
+      body: Stack(
+        //mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           // Google Map
-          Expanded(
-            flex: 14,
-            child: GoogleMap(
-              onMapCreated: _onMapCreated,
-              myLocationEnabled: true,
-              myLocationButtonEnabled: true,
-              zoomControlsEnabled: true,
-              initialCameraPosition: CameraPosition(target: _center, zoom: 16),
-              markers: Set<Marker>.of(_markers),
-            ),
-          ),
+          _GoogleMap(context),
           //Bike List Widget
-          Expanded(
-              flex: 5,
-              child: StreamBuilder<QuerySnapshot>(
-                  stream: bikes,
-                  builder: (BuildContext context,
-                      AsyncSnapshot<QuerySnapshot> snapshot) {
-                    if (snapshot.hasError) {
-                      return const Text('Something went wrong.');
-                    }
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Text('Loading');
-                    }
-                    final data = snapshot.requireData;
-                    var items = snapshot.data?.docs;
-                    //Bikes added to dictionary
-                    //Updated through locaiton update
-                    items?.forEach((bike) {
-                      initMarker(bike);
-                    });
+          Bikelist(),
+          zoomButtons(),
 
-                    //List builder for bike list
-                    return ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        shrinkWrap: true,
-                        itemCount: data.size,
-                        itemBuilder: (context, index) {
-                          bikeLoc[data.docs[index].id] =
-                              data.docs[index]['location'];
-                          return Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: FittedBox(
-                              fit: BoxFit.contain,
-                              child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: const BorderRadius.all(
-                                        Radius.circular(20)),
-                                    border: Border.all(color: Colors.black12),
-                                    color: Colors.grey,
-                                  ),
-                                  width: 200,
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: const [
-                                            Image(
-                                              image: AssetImage(
-                                                  'assets/images/bike-icon.png'),
-                                              height: 100,
-                                            )
-                                          ]),
-                                      Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            RatingStar(
-                                                rating: data.docs[index]
-                                                    ['rating']),
-                                          ]),
-                                      Padding(
-                                        padding: const EdgeInsets.all(1.0),
-                                        child: Row(
-                                          children: [
-                                            ElevatedButton(
-                                              style: const ButtonStyle(),
-                                              onPressed: () {},
-                                              child: const Text(
-                                                'View Bike',
-                                                style: TextStyle(
-                                                    color: Colors.black87),
-                                              ),
-                                            ),
-
-                                            // Will be used to select bike if within distance
-                                            if (closePoint[
-                                                    data.docs[index].id] ??
-                                                false)
-                                              ElevatedButton(
-                                                  onPressed: () {},
-                                                  child: const Text(
-                                                    'Select Bike',
-                                                    style: TextStyle(
-                                                        color: Colors.black54),
-                                                  ))
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  )),
-                            ),
-                          );
-                        });
-                  }))
         ],
       ),
     );
@@ -301,3 +411,8 @@ class RatingStar extends StatelessWidget {
     );
   }
 }
+
+
+
+
+
