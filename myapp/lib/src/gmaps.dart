@@ -1,5 +1,9 @@
 
+import 'dart:async';
+
 import 'package:bike_kollective/models/bike_model.dart';
+import 'package:bike_kollective/src/checkoutBike.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
@@ -22,8 +26,8 @@ class Gmaps extends StatefulWidget {
 class _GmapsState extends State<Gmaps> {
   //location
   final Location _location = Location();
-  late var listen = _location.onLocationChanged.listen((event) {});
-
+  //late var listen = _location.onLocationChanged.listen((event) {});
+  late StreamSubscription listen;
   //Dictionary of distance from user True or False if close enough
   Map<String, bool> closePoint = {};
 
@@ -33,20 +37,32 @@ class _GmapsState extends State<Gmaps> {
   Map<String, GeoPoint> bikeLoc = {};
 
   late GoogleMapController mapController;
-  final List<Marker> _markers = <Marker>[];
-
+  final Map<MarkerId, Marker> _markers = <MarkerId, Marker>{};
+  late Stream user;
 
 
   final Stream<QuerySnapshot> bikes = FirebaseFirestore.instance.collection('bikes').snapshots();
+  final Stream<DocumentSnapshot> user1 = FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser?.uid).snapshots();
+  //Testing user id
 
+  late Map<String, dynamic> userinfo;
 
+  CurrUser(){
+    user = FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser?.uid).snapshots();
+    user.listen(( snapshot) {
+    userinfo = snapshot.data();
+    print(userinfo);
+          //print(userinfo);
+          //final data = snapshot.requireData;
+          //print(data);
+    });
+  }
 
   // Starting position of the map
   // Location is Oregon state university
   final LatLng _center = const LatLng(44.56457554667605, -123.27994855698064);
 
 
-  bool UserCheckout = true;
   // Function to ask permission for location
 
   Future<void> requestPermission() async { await Permission.location.request();
@@ -64,7 +80,7 @@ class _GmapsState extends State<Gmaps> {
   @override
   void initState() {
     super.initState();
-
+    CurrUser();
     requestPermission();
   }
 
@@ -73,14 +89,18 @@ class _GmapsState extends State<Gmaps> {
   void dispose() async {
     mapController.dispose();
     listen.cancel();
+    // user.cancel();
     super.dispose();
   }
 
   currLocation() async {
     var _currPosition = await _location.getLocation();
     const lt.Distance distance = lt.Distance();
-    _location.onLocationChanged.listen((event) {
+    listen = _location.onLocationChanged.listen((event) {
+      // Mounted needed to check if the screen is still active
+      // If not it it will not update
       if(this.mounted){ setState(() {
+
         bikeLoc.forEach((key, value) {
 
           var space1 = distance.as(lt.LengthUnit.Meter,
@@ -91,7 +111,7 @@ class _GmapsState extends State<Gmaps> {
         }
             );
 
-      });};
+      });}
     });
     return _currPosition;
   }
@@ -173,15 +193,14 @@ class _GmapsState extends State<Gmaps> {
         {}
         break;
     }
-
-    _markers.add(Marker(
+    var temp = (Marker(
         markerId: MarkerId(bike['make']),
         position: LatLng(bike['location'].latitude, bike['location'].longitude),
         infoWindow: InfoWindow(title: bike['model']),
-
         icon: BitmapDescriptor.defaultMarkerWithHue(hue)
         
     ));
+    _markers[temp.markerId]= temp;
 
   }
 
@@ -191,6 +210,7 @@ class _GmapsState extends State<Gmaps> {
         CameraPosition(target: LatLng(location.latitude, location.longitude),
             zoom: curZoom)));
   }
+
   Future<void> downloadURLExample(image) async {
     String downloadURL = await firebase_storage.FirebaseStorage.instance
         .ref('bikes'+image)
@@ -253,7 +273,7 @@ class _GmapsState extends State<Gmaps> {
       zoomControlsEnabled: false,
       initialCameraPosition:
       CameraPosition(target: _center, zoom: 16),
-      markers: Set<Marker>.of(_markers),
+      markers: Set<Marker>.of(_markers.values),
     );
   }
   
@@ -274,7 +294,7 @@ class _GmapsState extends State<Gmaps> {
     return Align(
       alignment: Alignment.bottomLeft,
       child: Container(
-          height: 275,
+          height: 225,
           child:
           StreamBuilder<QuerySnapshot>(stream: bikes,
               builder: (BuildContext context,
@@ -290,7 +310,8 @@ class _GmapsState extends State<Gmaps> {
                 //Updated through location update
                 items?.forEach((bike) {initMarker(bike);});
 
-                //if (UserCheckout == true){print("HERE");}
+
+
                 //List builder for bike list
                 return ListView.builder(
                     scrollDirection: Axis.horizontal,
@@ -353,7 +374,10 @@ class _GmapsState extends State<Gmaps> {
 
                                             // Will be used to select bike if within distance
                                             if(closePoint[data.docs[index].id]??false)
-                                              ElevatedButton(onPressed: (){}, child:
+                                              ElevatedButton(onPressed: (){
+                                                Navigator.push(context, MaterialPageRoute(builder: (context)=>
+                                                checkoutBike(bikeId: data.docs[index].id)));
+                                              }, child:
                                               const Text('Select Bike',
                                                 style: TextStyle(color: Colors.black54),))
                                           ],
