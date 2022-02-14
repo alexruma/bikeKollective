@@ -3,6 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'src_exports.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+import 'package:flutterfire_ui/auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 void main() async {
   // Setting need to start firebase
@@ -25,7 +27,22 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
+    const List<ProviderConfiguration> providerConfigs = [
+      EmailProviderConfiguration(),
+      GoogleProviderConfiguration(clientId: '')
+    ];
     return MaterialApp(
+      routes: {
+        '/sign-in': (context) => const SignIn(providerConfigs: providerConfigs),
+        '/home': (context) => const NavBarPage(),
+        '/forgot-password': (context) => const BKForgotPassword(),
+        '/profile': (context) =>
+            ProfileScreen(providerConfigs: providerConfigs, actions: [
+              SignedOutAction((context) {
+                Navigator.of(context).pushReplacementNamed('/sign-in');
+              }),
+            ])
+      },
       title: 'Bike Kollective',
       theme: ThemeData(
           primarySwatch: Colors.blue,

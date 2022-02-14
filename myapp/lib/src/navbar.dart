@@ -1,8 +1,10 @@
 import 'package:bike_kollective/src/account.dart';
 import 'package:bike_kollective/src/bikes.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:bike_kollective/src_exports.dart';
 import 'package:flutterfire_ui/auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class NavBarPage extends StatefulWidget {
   const NavBarPage({
@@ -15,7 +17,7 @@ class NavBarPage extends StatefulWidget {
 
 class _NavBarPageState extends State<NavBarPage> {
   int _selectedIndex = 0;
-  String _titleText = "Business Card";
+  String _titleText = "Bike Kollective";
 
   void _updateIndex(int index) {
     setState(() {
@@ -43,13 +45,36 @@ class _NavBarPageState extends State<NavBarPage> {
     return Scaffold(
       appBar: AppBar(
         title: Row(children: [
-          Center(child: Text(_titleText)),
-          Image.asset(
-            'assets/images/bike-icon.png',
-            height: 85,
-            width: 85,
-          ),
+          Center(
+              child: Padding(
+            padding: const EdgeInsets.all(2.0),
+            child: Text(_titleText),
+          )),
+          // Padding(
+          //   padding: const EdgeInsets.all(2.0),
+          //   child: GestureDetector(
+          //     child: Text('Sign Out'),
+          //     onTap: () async {
+          //       signOutAction();
+          //     },
+          //   ),
+          // ),
+          GestureDetector(
+            child: Text('Get User'),
+            onTap: () async {
+              final FirebaseAuth auth = FirebaseAuth.instance;
+              //User user = auth.currentUser;
+              print(auth.currentUser);
+              setState(() {});
+            },
+          )
         ]),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.logout),
+            onPressed: signOutAction,
+          )
+        ],
       ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
@@ -78,5 +103,12 @@ class _NavBarPageState extends State<NavBarPage> {
         child: _pages.elementAt(_selectedIndex),
       ),
     );
+  }
+
+  // Function that executes on tap of Sign Out button/text.
+  signOutAction() {
+    FirebaseAuth.instance.signOut();
+    setState(() {});
+    Navigator.of(context).pushReplacementNamed('/sign-in');
   }
 }
