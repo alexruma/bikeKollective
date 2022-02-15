@@ -7,3 +7,5 @@ export 'src/create_account.dart';
 export 'src/constants.dart';
 export 'src/authentication.dart';
 export 'src/account.dart';
+export 'helpers/add_user.dart';
+export 'models/user_model.dart';
