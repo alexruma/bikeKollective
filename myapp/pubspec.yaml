@@ -51,6 +51,8 @@ dependencies:
   dotenv: ^3.0.0
   firebase_storage: ^10.2.6
   firebase_image: ^1.1.1
+  image_picker: ^0.8.4+9
+  uuid: ^3.0.5
 
 
 dev_dependencies:

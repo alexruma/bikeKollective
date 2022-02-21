@@ -9,3 +9,4 @@ export 'src/authentication.dart';
 export 'src/account.dart';
 export 'helpers/add_user.dart';
 export 'models/user_model.dart';
+export 'src/addBike.dart';
