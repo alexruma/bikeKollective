@@ -62,7 +62,7 @@ class _checkoutBikeState extends State<checkoutBike> {
 
   checkout(){
     if(userinfo["bikeCheckedOut"] == "" && bikeinfo["available"] == true){
-      
+
       bike.doc(widget.bikeId).update({'available': false,
                           'cur_user': FirebaseAuth.instance.currentUser?.uid,
       });
