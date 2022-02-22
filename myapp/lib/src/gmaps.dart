@@ -3,6 +3,7 @@ import 'dart:async';
 
 import 'package:bike_kollective/models/bike_model.dart';
 import 'package:bike_kollective/src/checkoutBike.dart';
+import 'package:bike_kollective/src/returnBike.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -26,7 +27,8 @@ class Gmaps extends StatefulWidget {
 class _GmapsState extends State<Gmaps> {
   //location
   final Location _location = Location();
-  //late var listen = _location.onLocationChanged.listen((event) {});
+  late LocationData _currPosition;
+
   late StreamSubscription listen;
   //Dictionary of distance from user True or False if close enough
   Map<String, bool> closePoint = {};
@@ -53,7 +55,7 @@ class _GmapsState extends State<Gmaps> {
     user = FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser?.uid).snapshots();
     user.listen(( snapshot) {
     userinfo = snapshot.data();
-    print(userinfo);
+    // print(userinfo);
           //print(userinfo);
           //final data = snapshot.requireData;
           //print(data);
@@ -84,6 +86,7 @@ class _GmapsState extends State<Gmaps> {
     super.initState();
     CurrUser();
     requestPermission();
+    locationsettings();
   }
 
   // Dispose to stop listeners when leaving widget
@@ -95,13 +98,23 @@ class _GmapsState extends State<Gmaps> {
     super.dispose();
   }
 
+  locationsettings(){
+    _location.changeSettings(interval: 1000, distanceFilter: 2);
+    // print("location changes");
+  }
   currLocation() async {
-    var _currPosition = await _location.getLocation();
+    LocationData _currPosition = await _location.getLocation();
     const lt.Distance distance = lt.Distance();
+    _location.changeSettings(interval: 2000, distanceFilter: 2);
     listen = _location.onLocationChanged.listen((event) {
       // Mounted needed to check if the screen is still active
       // If not it it will not update
-      if(this.mounted){ setState(() {
+      // print("STuff");
+      // print(event);
+      // _currPosition = event;
+      // print(_currPosition);
+
+      if(mounted){ setState(() {
 
         bikeLoc.forEach((key, value) {
 
@@ -161,7 +174,7 @@ class _GmapsState extends State<Gmaps> {
     // Set state need to update markers on Gmap
     // Set state handled with location update.
     if(bike['available'] == false){
-      print(bike.id);
+      // print(bike.id);
       _markers.remove(bike.id);
     } else {
       var rating = bike['rating'];
@@ -320,6 +333,7 @@ class _GmapsState extends State<Gmaps> {
                     itemCount: data.size,
                     itemBuilder: (context, index){
                       bikeLoc[data.docs[index].id] = data.docs[index]['location'];
+                      if(data.docs[index]['available']!=false){
                       return
                         Padding(
                           padding: const EdgeInsets.all(8.0),
@@ -389,7 +403,8 @@ class _GmapsState extends State<Gmaps> {
                               ),
                             ),
                           ),
-                        );
+                        );}
+                      return const SizedBox.shrink();
                     });
               })),
     );
@@ -423,14 +438,15 @@ class _GmapsState extends State<Gmaps> {
       future: currBike.doc(userdata['bikeCheckedOut']).get(),
       builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot){
         if(snapshot.hasError){
-          return Text("Something went wrong");
+          return const Text("Something went wrong");
         }
         if(snapshot.hasData && !snapshot.data!.exists){
-          return Text("Bike does note exist.");
+          return const Text("Bike does note exist.");
         }
-        if(snapshot.connectionState == ConnectionState.done){
-          Map<String, dynamic> bikeinfo = snapshot.data!.data() as Map<String, dynamic>;
-          return Align(alignment: Alignment .bottomLeft,
+        if(snapshot.data?.data() != null ){
+          Map<String, dynamic> bikeinfo = snapshot.data?.data() as Map<String, dynamic>;
+        if (bikeinfo.isNotEmpty){
+        return Align(alignment: Alignment .bottomLeft,
             child: Container(
               height: 225,
               width: double.infinity,
@@ -472,23 +488,25 @@ class _GmapsState extends State<Gmaps> {
                           children: [
                             ElevatedButton(child: const Text("Return Bike"),
                               onPressed: (){
+                                Navigator.push(context, MaterialPageRoute(
+
+                                    builder: (context)=>returnBike(bikeId: snapshot.data!.id)));
 
                               }, ),
                             ElevatedButton(
                               child: const Text("Report Stolen"),
                               style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.red)),
                               onPressed: (){
-                                print("HERE");
+                                // print("HERE");
                               }, )],
                         ),
-
                       ],
                     ),
                   )
               ),
             ),);
-        }
-        return const CircularProgressIndicator();
+        }}
+        return const Center(child: CircularProgressIndicator());
       },
     );
   }
