@@ -1,5 +1,6 @@
 import 'package:bike_kollective/src/account.dart';
 import 'package:bike_kollective/src/bikes.dart';
+import 'package:bike_kollective/src/set_up_account.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:bike_kollective/src_exports.dart';
@@ -40,6 +41,25 @@ class _NavBarPageState extends State<NavBarPage> {
     "My Account"
   ];
 
+  Future<bool> asyncUidCheck() async {
+    bool inDB = await CheckForUser.checkDbForUid(
+        FirebaseAuth.instance.currentUser?.uid);
+
+    if (inDB == false) {
+      setState(() {});
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (context) => SetUpPage()));
+    }
+    return inDB;
+  }
+
+  @override
+  // Check if firebase_auth uid corresponds to document in db.
+  void initState() {
+    asyncUidCheck().then((value) {});
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,28 +70,19 @@ class _NavBarPageState extends State<NavBarPage> {
             padding: const EdgeInsets.all(2.0),
             child: Text(_titleText),
           )),
-          // Padding(
-          //   padding: const EdgeInsets.all(2.0),
-          //   child: GestureDetector(
-          //     child: Text('Sign Out'),
-          //     onTap: () async {
-          //       signOutAction();
-          //     },
-          //   ),
-          // ),
           GestureDetector(
             child: Text('Get User'),
             onTap: () async {
               final FirebaseAuth auth = FirebaseAuth.instance;
               //User user = auth.currentUser;
-              print(auth.currentUser);
+              print(auth.currentUser?.uid);
               setState(() {});
             },
           )
         ]),
         actions: [
           IconButton(
-            icon: Icon(Icons.logout),
+            icon: const Icon(Icons.logout),
             onPressed: signOutAction,
           )
         ],
@@ -106,7 +117,7 @@ class _NavBarPageState extends State<NavBarPage> {
   }
 
   // Function that executes on tap of Sign Out button/text.
-  signOutAction() {
+  void signOutAction() {
     FirebaseAuth.instance.signOut();
     setState(() {});
     Navigator.of(context).pushReplacementNamed('/sign-in');

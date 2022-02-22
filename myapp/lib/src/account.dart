@@ -95,8 +95,7 @@ class _AccountPageState extends State<AccountPage> {
 
   // Create new user model
   UserModel createUserModel(var tempMap) {
-    UserModel newUser = UserModel(tempMap['userID'], tempMap['firstName'],
-        tempMap['lastName'], tempMap['email']);
+    UserModel newUser = UserModel(tempMap);
     return newUser;
   }
 

@@ -1,4 +1,3 @@
-
 import 'dart:async';
 
 import 'package:bike_kollective/models/bike_model.dart';
@@ -44,21 +43,28 @@ class _GmapsState extends State<Gmaps> {
 
   Map<String, dynamic> bikeinfo = {};
 
-  final Stream<QuerySnapshot> bikes = FirebaseFirestore.instance.collection('bikes').snapshots();
-  final Stream<DocumentSnapshot> user1 = FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser?.uid).snapshots();
-  final CollectionReference currBike = FirebaseFirestore.instance.collection('bikes');
-
+  final Stream<QuerySnapshot> bikes =
+      FirebaseFirestore.instance.collection('bikes').snapshots();
+  final Stream<DocumentSnapshot> user1 = FirebaseFirestore.instance
+      .collection('users')
+      .doc(FirebaseAuth.instance.currentUser?.uid)
+      .snapshots();
+  final CollectionReference currBike =
+      FirebaseFirestore.instance.collection('bikes');
 
   late Map<String, dynamic> userinfo;
 
-  CurrUser(){
-    user = FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser?.uid).snapshots();
-    user.listen(( snapshot) {
-    userinfo = snapshot.data();
-    // print(userinfo);
-          //print(userinfo);
-          //final data = snapshot.requireData;
-          //print(data);
+  CurrUser() {
+    user = FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser?.uid)
+        .snapshots();
+    user.listen((snapshot) {
+      userinfo = snapshot.data();
+      // print(userinfo);
+      //print(userinfo);
+      //final data = snapshot.requireData;
+      //print(data);
     });
   }
 
@@ -66,13 +72,12 @@ class _GmapsState extends State<Gmaps> {
   // Location is Oregon state university
   final LatLng _center = const LatLng(44.56457554667605, -123.27994855698064);
 
-
   // Function to ask permission for location
 
-  Future<void> requestPermission() async { await Permission.location.request();
-  setState(() {
-  });}
-
+  Future<void> requestPermission() async {
+    await Permission.location.request();
+    setState(() {});
+  }
 
   // Startup tasks when map is created
   void _onMapCreated(GoogleMapController controller) {
@@ -98,10 +103,11 @@ class _GmapsState extends State<Gmaps> {
     super.dispose();
   }
 
-  locationsettings(){
+  locationsettings() {
     _location.changeSettings(interval: 1000, distanceFilter: 2);
     // print("location changes");
   }
+
   currLocation() async {
     LocationData _currPosition = await _location.getLocation();
     const lt.Distance distance = lt.Distance();
@@ -114,52 +120,50 @@ class _GmapsState extends State<Gmaps> {
       // _currPosition = event;
       // print(_currPosition);
 
-      if(mounted){ setState(() {
-
-        bikeLoc.forEach((key, value) {
-
-          var space1 = distance.as(lt.LengthUnit.Meter,
-            lt.LatLng(event.latitude??00.0,event.longitude??00.00),
-            lt.LatLng(value.latitude,value.longitude));
+      if (mounted) {
+        setState(() {
+          bikeLoc.forEach((key, value) {
+            var space1 = distance.as(
+                lt.LengthUnit.Meter,
+                lt.LatLng(event.latitude ?? 00.0, event.longitude ?? 00.00),
+                lt.LatLng(value.latitude, value.longitude));
             bikeDistance[key] = space1;
             closePoint[key] = space1 < 10;
-        }
-            );
-
-      });}
+          });
+        });
+      }
     });
     return _currPosition;
   }
 
-  String distanceConv(meters){
-    if(meters< 1000){
+  String distanceConv(meters) {
+    if (meters < 1000) {
       double distance = meters * 3.281;
       return "${distance.toStringAsFixed(2)} ft";
-
-
-    } else{
+    } else {
       double distance = meters / 1609;
 
       return "${distance.toStringAsFixed(2)} miles";
     }
-
   }
 
-  Widget bikeFromUser(data){
+  Widget bikeFromUser(data) {
     // Gets bike id key and returns distance from user
-    return Row(children: [
-      const Text("Distance: ", style: TextStyle(fontWeight: FontWeight.bold),),
-      Text(distanceConv(bikeDistance[data])),
-    ],);
-
+    return Row(
+      children: [
+        const Text(
+          "Distance: ",
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        Text(distanceConv(bikeDistance[data])),
+      ],
+    );
   }
 
   createMarkers() async {
     //Markers for Bike available Locations
     // Calls firestore and gets bike info
-    FirebaseFirestore.instance.collection('bikes').get()
-        .then((docs) {
-
+    FirebaseFirestore.instance.collection('bikes').get().then((docs) {
       docs.docs.forEach((element) {
         initMarker(element);
       });
@@ -173,7 +177,7 @@ class _GmapsState extends State<Gmaps> {
   initMarker(bike) {
     // Set state need to update markers on Gmap
     // Set state handled with location update.
-    if(bike['available'] == false){
+    if (bike['available'] == false) {
       // print(bike.id);
       _markers.remove(bike.id);
     } else {
@@ -213,217 +217,279 @@ class _GmapsState extends State<Gmaps> {
       }
       var temp = (Marker(
           markerId: MarkerId(bike.id),
-          position: LatLng(
-              bike['location'].latitude, bike['location'].longitude),
+          position:
+              LatLng(bike['location'].latitude, bike['location'].longitude),
           infoWindow: InfoWindow(title: bike['model']),
-          icon: BitmapDescriptor.defaultMarkerWithHue(hue)
-
-      ));
+          icon: BitmapDescriptor.defaultMarkerWithHue(hue)));
       _markers[temp.markerId] = temp;
     }
   }
 
-  moveCamera(location)async{
+  moveCamera(location) async {
     double curZoom = await mapController.getZoomLevel();
-    mapController.animateCamera(CameraUpdate.newCameraPosition(
-        CameraPosition(target: LatLng(location.latitude, location.longitude),
-            zoom: curZoom)));
+    mapController.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
+        target: LatLng(location.latitude, location.longitude), zoom: curZoom)));
   }
 
-
-  
-  Widget zoomButtons(){
+  Widget zoomButtons() {
     return Align(
-      alignment: Alignment.topLeft,
+        alignment: Alignment.topLeft,
         child: Padding(
           padding: const EdgeInsets.all(20),
           child: Container(
             height: 80,
             width: 40,
-            decoration: BoxDecoration(color: Colors.white.withOpacity(.45),
-            border: Border.all(color:Colors.black.withOpacity(.45))),
-            child: Column(children: [
-              FittedBox(
-                fit: BoxFit.contain,
-                child:
-                  Container(
-                    decoration: BoxDecoration(border:
-                    Border(bottom: BorderSide(color:Colors.black.withOpacity(.45)))),
+            decoration: BoxDecoration(
+                color: Colors.white.withOpacity(.45),
+                border: Border.all(color: Colors.black.withOpacity(.45))),
+            child: Column(
+              children: [
+                FittedBox(
+                  fit: BoxFit.contain,
+                  child: Container(
+                    decoration: BoxDecoration(
+                        border: Border(
+                            bottom: BorderSide(
+                                color: Colors.black.withOpacity(.45)))),
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: GestureDetector(onTap: (){
-                        mapController.animateCamera(CameraUpdate.zoomIn());
-                      },
-                        child: const Icon(Icons.add,
-                        color: Colors.blueAccent),
+                      child: GestureDetector(
+                        onTap: () {
+                          mapController.animateCamera(CameraUpdate.zoomIn());
+                        },
+                        child: const Icon(Icons.add, color: Colors.blueAccent),
                       ),
                     ),
                   ),
-              ),
-              FittedBox(
-                fit: BoxFit.contain,
-                child:
-                  Padding(
+                ),
+                FittedBox(
+                  fit: BoxFit.contain,
+                  child: Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: GestureDetector(onTap: (){
-                      mapController.animateCamera(CameraUpdate.zoomOut());
-                    },
-                      child: const Icon(Icons.remove,
-                          color: Colors.blue),
+                    child: GestureDetector(
+                      onTap: () {
+                        mapController.animateCamera(CameraUpdate.zoomOut());
+                      },
+                      child: const Icon(Icons.remove, color: Colors.blue),
                     ),
                   ),
-
-              )
-            ],),),
+                )
+              ],
+            ),
+          ),
         ));
   }
 
-  Widget _GoogleMap(BuildContext context){
+  Widget _GoogleMap(BuildContext context) {
     return GoogleMap(
       onMapCreated: _onMapCreated,
       myLocationEnabled: true,
       myLocationButtonEnabled: true,
       zoomControlsEnabled: false,
-      initialCameraPosition:
-      CameraPosition(target: _center, zoom: 16),
+      initialCameraPosition: CameraPosition(target: _center, zoom: 16),
       markers: Set<Marker>.of(_markers.values),
     );
   }
-  
-  Widget cardImage(image){
-    if(image == ""){
-      return const Image(image: AssetImage('assets/images/bike-icon.png'),
+
+  Widget cardImage(image) {
+    if (image == "") {
+      return const Image(
+        image: AssetImage('assets/images/bike-icon.png'),
         width: 200,
-        height: 100
-        ,);
-    } else{
-      return Image(image: FirebaseImage(image),
+        height: 100,
+      );
+    } else {
+      return Image(
+        image: FirebaseImage(image),
         width: 200,
-        height: 100
-        ,);
+        height: 100,
+      );
     }
   }
 
-  Widget Bikelist(){
+  Widget Bikelist() {
     return Align(
       alignment: Alignment.bottomLeft,
       child: Container(
           height: 225,
-          child:
-          StreamBuilder<QuerySnapshot>(stream: bikes,
+          child: StreamBuilder<QuerySnapshot>(
+              stream: bikes,
               builder: (BuildContext context,
-                  AsyncSnapshot<QuerySnapshot> snapshot){
-                if (snapshot.hasError){
-                  return const Text('Something went wrong.');}
-                if (snapshot.connectionState == ConnectionState.waiting){
+                  AsyncSnapshot<QuerySnapshot> snapshot) {
+                if (snapshot.hasError) {
+                  return const Text('Something went wrong.');
+                }
+                if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Text('Loading');
                 }
                 final data = snapshot.requireData;
                 var items = snapshot.data?.docs;
                 //Bikes added to dictionary
                 //Updated through location update
-                items?.forEach((bike) {initMarker(bike);});
-
-
+                items?.forEach((bike) {
+                  initMarker(bike);
+                });
 
                 //List builder for bike list
                 return ListView.builder(
                     scrollDirection: Axis.horizontal,
                     shrinkWrap: true,
                     itemCount: data.size,
-                    itemBuilder: (context, index){
-                      bikeLoc[data.docs[index].id] = data.docs[index]['location'];
-                      if(data.docs[index]['available']!=false){
-                      return
-                        Padding(
+                    itemBuilder: (context, index) {
+                      bikeLoc[data.docs[index].id] =
+                          data.docs[index]['location'];
+                      if (data.docs[index]['available'] != false) {
+                        return Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: FittedBox(
                             fit: BoxFit.contain,
                             child: GestureDetector(
-                              onTap: (){moveCamera(data.docs[index]['location']);},
+                              onTap: () {
+                                moveCamera(data.docs[index]['location']);
+                              },
                               child: Container(
-                                  decoration: BoxDecoration(borderRadius: const BorderRadius.all(Radius.circular(20)),
+                                  decoration: BoxDecoration(
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(20)),
                                     border: Border.all(color: Colors.black12),
-                                    color: Colors.grey.withOpacity(.95),),
+                                    color: Colors.grey.withOpacity(.95),
+                                  ),
                                   width: 275,
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [ Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children:  [
-                                          cardImage(data.docs[index]['image'])
-                                        ]),
-                                      Row(mainAxisAlignment: MainAxisAlignment.center,
-                                          children:[ RatingStar(rating: data.docs[index]['rating']),],
+                                    children: [
+                                      Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            cardImage(data.docs[index]['image'])
+                                          ]),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          RatingStar(
+                                              rating: data.docs[index]
+                                                  ['rating']),
+                                        ],
                                       ),
-                                      if(bikeDistance.containsKey(data.docs[index].id))
+                                      if (bikeDistance
+                                          .containsKey(data.docs[index].id))
                                         bikeFromUser(data.docs[index].id),
-
-                                      Row(children:[
-                                        const Text("Type: ",style: TextStyle(fontWeight: FontWeight.bold),),
+                                      Row(children: [
+                                        const Text(
+                                          "Type: ",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold),
+                                        ),
                                         Text("${data.docs[index]['category']}"),
-                                        const Text(" Year: ",style: TextStyle(fontWeight: FontWeight.bold),),
+                                        const Text(
+                                          " Year: ",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold),
+                                        ),
                                         Text("${data.docs[index]['year']}"),
-                                        const Text(" Condition: ",style: TextStyle(fontWeight: FontWeight.bold),),
-                                        Text("${data.docs[index]['condition']}")]),
-                                      Row(children: [
-                                        const Text("Make: ",style: TextStyle(fontWeight: FontWeight.bold),),
-                                        Text('${data.docs[index]['make']}'),
-                                        const Text(" Model: ",style: TextStyle(fontWeight: FontWeight.bold),),
-                                        Text('${data.docs[index]['model']}')
-                                      ],),
-
-                                      Row(children: [
-                                        const Text("Tags: ",style: TextStyle(fontWeight: FontWeight.bold),),
-                                        Text("${data.docs[index]['tags']}",
-                                          overflow: TextOverflow.fade,)
-                                      ],),
+                                        const Text(
+                                          " Condition: ",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        Text("${data.docs[index]['condition']}")
+                                      ]),
+                                      Row(
+                                        children: [
+                                          const Text(
+                                            "Make: ",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          Text('${data.docs[index]['make']}'),
+                                          const Text(
+                                            " Model: ",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          Text('${data.docs[index]['model']}')
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          const Text(
+                                            "Tags: ",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          Text(
+                                            "${data.docs[index]['tags']}",
+                                            overflow: TextOverflow.fade,
+                                          )
+                                        ],
+                                      ),
                                       Padding(
                                         padding: const EdgeInsets.all(1.0),
                                         child: Row(
                                           children: [
-                                            ElevatedButton(style: const ButtonStyle(),
-                                              onPressed: () {  },
-                                              child: const Text('View Bike',
-                                                style: TextStyle(color: Colors.black87),),),
+                                            ElevatedButton(
+                                              style: const ButtonStyle(),
+                                              onPressed: () {},
+                                              child: const Text(
+                                                'View Bike',
+                                                style: TextStyle(
+                                                    color: Colors.black87),
+                                              ),
+                                            ),
 
                                             // Will be used to select bike if within distance
-                                            if(closePoint[data.docs[index].id]??false)
-                                              ElevatedButton(onPressed: (){
-                                                Navigator.push(context, MaterialPageRoute(builder: (context)=>
-                                                checkoutBike(bikeId: data.docs[index].id)));
-                                              }, child:
-                                              const Text('Select Bike',
-                                                style: TextStyle(color: Colors.black54),))
+                                            if (closePoint[
+                                                    data.docs[index].id] ??
+                                                false)
+                                              ElevatedButton(
+                                                  onPressed: () {
+                                                    Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                checkoutBike(
+                                                                    bikeId: data
+                                                                        .docs[
+                                                                            index]
+                                                                        .id)));
+                                                  },
+                                                  child: const Text(
+                                                    'Select Bike',
+                                                    style: TextStyle(
+                                                        color: Colors.black54),
+                                                  ))
                                           ],
                                         ),
                                       ),
                                     ],
-                                  )
-                              ),
+                                  )),
                             ),
                           ),
-                        );}
+                        );
+                      }
                       return const SizedBox.shrink();
                     });
               })),
     );
   }
-  
-  Widget userInfo(){
+
+  Widget userInfo() {
     return StreamBuilder<DocumentSnapshot>(
       stream: user1,
-      builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot){
-        if(snapshot.hasError){
+      builder:
+          (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+        if (snapshot.hasError) {
           return const Text('Something went wrong.');
         }
-        if (snapshot.connectionState == ConnectionState.waiting){
+        if (snapshot.connectionState == ConnectionState.waiting) {
           return const Text('Loading');
         }
 
         final userdata = snapshot.requireData;
 
-        if(userdata['bikeCheckedOut']!= ""){
+        if (userdata['bikeCheckedOut'] != "") {
           // Clear all markers and show current bike
           _markers.clear();
           return user_bike_check(userdata);
@@ -436,76 +502,122 @@ class _GmapsState extends State<Gmaps> {
   Widget user_bike_check(userdata) {
     return FutureBuilder<DocumentSnapshot>(
       future: currBike.doc(userdata['bikeCheckedOut']).get(),
-      builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot){
-        if(snapshot.hasError){
+      builder:
+          (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+        if (snapshot.hasError) {
           return const Text("Something went wrong");
         }
-        if(snapshot.hasData && !snapshot.data!.exists){
+        if (snapshot.hasData && !snapshot.data!.exists) {
           return const Text("Bike does note exist.");
         }
-        if(snapshot.data?.data() != null ){
-          Map<String, dynamic> bikeinfo = snapshot.data?.data() as Map<String, dynamic>;
-        if (bikeinfo.isNotEmpty){
-        return Align(alignment: Alignment .bottomLeft,
-            child: Container(
-              height: 225,
-              width: double.infinity,
-              color: Colors.grey.withOpacity(.95),
-              child: FittedBox(
-                  fit: BoxFit.contain,
-                  child: Container(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Row(children: const [Text("Current Bike")],),
-                        Row(children: [cardImage(bikeinfo['image'])],),
-                        Row( mainAxisAlignment: MainAxisAlignment.center,
-                            children:
-                            [RatingStar(rating: bikeinfo['rating'],)]),
-                        Row(mainAxisAlignment: MainAxisAlignment.center,
-                            children:[
-                              const Text("Type: ",style: TextStyle(fontWeight: FontWeight.bold),),
-                              Text("${bikeinfo['category']}"),
-                              const Text(" Year: ",style: TextStyle(fontWeight: FontWeight.bold),),
-                              Text("${bikeinfo['year']}"),
-                              const Text(" Condition: ",style: TextStyle(fontWeight: FontWeight.bold),),
-                              Text("${bikeinfo['condition']}")]),
-                        Row(mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Text("Make: ",style: TextStyle(fontWeight: FontWeight.bold),),
-                            Text('${bikeinfo['make']}'),
-                            const Text(" Model: ",style: TextStyle(fontWeight: FontWeight.bold),),
-                            Text('${bikeinfo['model']}')
-                          ],),
-
-                        Row(mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Text("Tags: ",style: TextStyle(fontWeight: FontWeight.bold),),
-                            Text("${bikeinfo['tags']}",
-                              overflow: TextOverflow.fade,)
-                          ],),
-                        Row(mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            ElevatedButton(child: const Text("Return Bike"),
-                              onPressed: (){
-                                Navigator.push(context, MaterialPageRoute(
-
-                                    builder: (context)=>returnBike(bikeId: snapshot.data!.id)));
-
-                              }, ),
-                            ElevatedButton(
-                              child: const Text("Report Stolen"),
-                              style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.red)),
-                              onPressed: (){
-                                // print("HERE");
-                              }, )],
-                        ),
-                      ],
-                    ),
-                  )
+        if (snapshot.data?.data() != null) {
+          Map<String, dynamic> bikeinfo =
+              snapshot.data?.data() as Map<String, dynamic>;
+          if (bikeinfo.isNotEmpty) {
+            return Align(
+              alignment: Alignment.bottomLeft,
+              child: Container(
+                height: 225,
+                width: double.infinity,
+                color: Colors.grey.withOpacity(.95),
+                child: FittedBox(
+                    fit: BoxFit.contain,
+                    child: Container(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Row(
+                            children: const [Text("Current Bike")],
+                          ),
+                          Row(
+                            children: [cardImage(bikeinfo['image'])],
+                          ),
+                          Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                RatingStar(
+                                  rating: bikeinfo['rating'],
+                                )
+                              ]),
+                          Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Text(
+                                  "Type: ",
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                Text("${bikeinfo['category']}"),
+                                const Text(
+                                  " Year: ",
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                Text("${bikeinfo['year']}"),
+                                const Text(
+                                  " Condition: ",
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                Text("${bikeinfo['condition']}")
+                              ]),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Text(
+                                "Make: ",
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              Text('${bikeinfo['make']}'),
+                              const Text(
+                                " Model: ",
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              Text('${bikeinfo['model']}')
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Text(
+                                "Tags: ",
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                "${bikeinfo['tags']}",
+                                overflow: TextOverflow.fade,
+                              )
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              ElevatedButton(
+                                child: const Text("Return Bike"),
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => returnBike(
+                                              bikeId: snapshot.data!.id)));
+                                },
+                              ),
+                              ElevatedButton(
+                                child: const Text("Report Stolen"),
+                                style: ButtonStyle(
+                                    backgroundColor:
+                                        MaterialStateProperty.all<Color>(
+                                            Colors.red)),
+                                onPressed: () {
+                                  // print("HERE");
+                                },
+                              )
+                            ],
+                          ),
+                        ],
+                      ),
+                    )),
               ),
-            ),);
-        }}
+            );
+          }
+        }
         return const Center(child: CircularProgressIndicator());
       },
     );
@@ -516,7 +628,6 @@ class _GmapsState extends State<Gmaps> {
     currLocation();
     return Scaffold(
       resizeToAvoidBottomInset: false,
-
       body: Stack(
         children: [
           // Google Map
@@ -525,7 +636,6 @@ class _GmapsState extends State<Gmaps> {
           userInfo(),
           // Bikelist(),
           zoomButtons(),
-
         ],
       ),
     );
@@ -549,8 +659,3 @@ class RatingStar extends StatelessWidget {
     );
   }
 }
-
-
-
-
-
