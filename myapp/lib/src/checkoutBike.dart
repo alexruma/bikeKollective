@@ -27,7 +27,7 @@ class _checkoutBikeState extends State<checkoutBike> {
   Future<Map<String, dynamic>> getBikeInfo () async {
     return await bike.doc(widget.bikeId).get().then((DocumentSnapshot value){
       bikeinfo = value.data() as Map<String, dynamic>;
-      print(bikeinfo);
+      // print(bikeinfo);
       return bikeinfo;
     }
     );
@@ -36,7 +36,7 @@ class _checkoutBikeState extends State<checkoutBike> {
   Future<Map<String, dynamic>> getUserInfo() async {
     return await users.doc(FirebaseAuth.instance.currentUser?.uid).get().then((DocumentSnapshot value){
       userinfo = value.data() as Map<String, dynamic>;
-      print(userinfo);
+      // print(userinfo);
       return userinfo;
     });
   }
@@ -62,7 +62,7 @@ class _checkoutBikeState extends State<checkoutBike> {
 
   checkout(){
     if(userinfo["bikeCheckedOut"] == "" && bikeinfo["available"] == true){
-      
+
       bike.doc(widget.bikeId).update({'available': false,
                           'cur_user': FirebaseAuth.instance.currentUser?.uid,
       });
@@ -73,7 +73,7 @@ class _checkoutBikeState extends State<checkoutBike> {
         useRootNavigator: false,
         context: context,
         builder: (BuildContext context){
-        return AlertDialog(title: Text("Bike Checked Out"),
+        return AlertDialog(title: const Text("Bike Checked Out"),
           content: SingleChildScrollView(
             child: ListBody(
               children: [Text("Your bike is checked out. Use the following code to "

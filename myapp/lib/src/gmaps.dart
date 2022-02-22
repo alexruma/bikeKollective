@@ -3,6 +3,7 @@ import 'dart:async';
 
 import 'package:bike_kollective/models/bike_model.dart';
 import 'package:bike_kollective/src/checkoutBike.dart';
+import 'package:bike_kollective/src/returnBike.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -26,7 +27,8 @@ class Gmaps extends StatefulWidget {
 class _GmapsState extends State<Gmaps> {
   //location
   final Location _location = Location();
-  //late var listen = _location.onLocationChanged.listen((event) {});
+  late LocationData _currPosition;
+
   late StreamSubscription listen;
   //Dictionary of distance from user True or False if close enough
   Map<String, bool> closePoint = {};
@@ -40,10 +42,12 @@ class _GmapsState extends State<Gmaps> {
   final Map<MarkerId, Marker> _markers = <MarkerId, Marker>{};
   late Stream user;
 
+  Map<String, dynamic> bikeinfo = {};
 
   final Stream<QuerySnapshot> bikes = FirebaseFirestore.instance.collection('bikes').snapshots();
   final Stream<DocumentSnapshot> user1 = FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser?.uid).snapshots();
-  //Testing user id
+  final CollectionReference currBike = FirebaseFirestore.instance.collection('bikes');
+
 
   late Map<String, dynamic> userinfo;
 
@@ -51,7 +55,7 @@ class _GmapsState extends State<Gmaps> {
     user = FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser?.uid).snapshots();
     user.listen(( snapshot) {
     userinfo = snapshot.data();
-    print(userinfo);
+    // print(userinfo);
           //print(userinfo);
           //final data = snapshot.requireData;
           //print(data);
@@ -73,7 +77,7 @@ class _GmapsState extends State<Gmaps> {
   // Startup tasks when map is created
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
-    createMarkers();
+    // createMarkers();
   }
 
   //Init State
@@ -82,6 +86,7 @@ class _GmapsState extends State<Gmaps> {
     super.initState();
     CurrUser();
     requestPermission();
+    locationsettings();
   }
 
   // Dispose to stop listeners when leaving widget
@@ -93,13 +98,23 @@ class _GmapsState extends State<Gmaps> {
     super.dispose();
   }
 
+  locationsettings(){
+    _location.changeSettings(interval: 1000, distanceFilter: 2);
+    // print("location changes");
+  }
   currLocation() async {
-    var _currPosition = await _location.getLocation();
+    LocationData _currPosition = await _location.getLocation();
     const lt.Distance distance = lt.Distance();
+    _location.changeSettings(interval: 2000, distanceFilter: 2);
     listen = _location.onLocationChanged.listen((event) {
       // Mounted needed to check if the screen is still active
       // If not it it will not update
-      if(this.mounted){ setState(() {
+      // print("STuff");
+      // print(event);
+      // _currPosition = event;
+      // print(_currPosition);
+
+      if(mounted){ setState(() {
 
         bikeLoc.forEach((key, value) {
 
@@ -158,50 +173,54 @@ class _GmapsState extends State<Gmaps> {
   initMarker(bike) {
     // Set state need to update markers on Gmap
     // Set state handled with location update.
+    if(bike['available'] == false){
+      // print(bike.id);
+      _markers.remove(bike.id);
+    } else {
+      var rating = bike['rating'];
+      var hue = BitmapDescriptor.hueAzure;
 
-    var rating = bike['rating'];
-    var hue = BitmapDescriptor.hueAzure;
+      // Changes the color of the icon based on the rating
+      switch (rating) {
+        case 5:
+          {
+            hue = BitmapDescriptor.hueGreen;
+          }
+          break;
+        case 4:
+          {
+            hue = BitmapDescriptor.hueAzure;
+          }
+          break;
+        case 3:
+          {
+            hue = BitmapDescriptor.hueOrange;
+          }
+          break;
+        case 2:
+          {
+            hue = BitmapDescriptor.hueYellow;
+          }
+          break;
+        case 1:
+          {
+            hue = BitmapDescriptor.hueRed;
+          }
+          break;
+        default:
+          {}
+          break;
+      }
+      var temp = (Marker(
+          markerId: MarkerId(bike.id),
+          position: LatLng(
+              bike['location'].latitude, bike['location'].longitude),
+          infoWindow: InfoWindow(title: bike['model']),
+          icon: BitmapDescriptor.defaultMarkerWithHue(hue)
 
-    // Changes the color of the icon based on the rating
-    switch (rating) {
-      case 5:
-        {
-          hue = BitmapDescriptor.hueGreen;
-        }
-        break;
-      case 4:
-        {
-          hue = BitmapDescriptor.hueAzure;
-        }
-        break;
-      case 3:
-        {
-          hue = BitmapDescriptor.hueOrange;
-        }
-        break;
-      case 2:
-        {
-          hue = BitmapDescriptor.hueYellow;
-        }
-        break;
-      case 1:
-        {
-          hue = BitmapDescriptor.hueRed;
-        }
-        break;
-      default:
-        {}
-        break;
+      ));
+      _markers[temp.markerId] = temp;
     }
-    var temp = (Marker(
-        markerId: MarkerId(bike['make']),
-        position: LatLng(bike['location'].latitude, bike['location'].longitude),
-        infoWindow: InfoWindow(title: bike['model']),
-        icon: BitmapDescriptor.defaultMarkerWithHue(hue)
-        
-    ));
-    _markers[temp.markerId]= temp;
-
   }
 
   moveCamera(location)async{
@@ -211,13 +230,7 @@ class _GmapsState extends State<Gmaps> {
             zoom: curZoom)));
   }
 
-  Future<void> downloadURLExample(image) async {
-    String downloadURL = await firebase_storage.FirebaseStorage.instance
-        .ref('bikes'+image)
-        .getDownloadURL();
 
-    //Still need Image.network(downloadURL)
-  }
   
   Widget zoomButtons(){
     return Align(
@@ -290,6 +303,7 @@ class _GmapsState extends State<Gmaps> {
         ,);
     }
   }
+
   Widget Bikelist(){
     return Align(
       alignment: Alignment.bottomLeft,
@@ -319,6 +333,7 @@ class _GmapsState extends State<Gmaps> {
                     itemCount: data.size,
                     itemBuilder: (context, index){
                       bikeLoc[data.docs[index].id] = data.docs[index]['location'];
+                      if(data.docs[index]['available']!=false){
                       return
                         Padding(
                           padding: const EdgeInsets.all(8.0),
@@ -388,12 +403,113 @@ class _GmapsState extends State<Gmaps> {
                               ),
                             ),
                           ),
-                        );
+                        );}
+                      return const SizedBox.shrink();
                     });
               })),
     );
   }
   
+  Widget userInfo(){
+    return StreamBuilder<DocumentSnapshot>(
+      stream: user1,
+      builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot){
+        if(snapshot.hasError){
+          return const Text('Something went wrong.');
+        }
+        if (snapshot.connectionState == ConnectionState.waiting){
+          return const Text('Loading');
+        }
+
+        final userdata = snapshot.requireData;
+
+        if(userdata['bikeCheckedOut']!= ""){
+          // Clear all markers and show current bike
+          _markers.clear();
+          return user_bike_check(userdata);
+        }
+        return Bikelist();
+      },
+    );
+  }
+
+  Widget user_bike_check(userdata) {
+    return FutureBuilder<DocumentSnapshot>(
+      future: currBike.doc(userdata['bikeCheckedOut']).get(),
+      builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot){
+        if(snapshot.hasError){
+          return const Text("Something went wrong");
+        }
+        if(snapshot.hasData && !snapshot.data!.exists){
+          return const Text("Bike does note exist.");
+        }
+        if(snapshot.data?.data() != null ){
+          Map<String, dynamic> bikeinfo = snapshot.data?.data() as Map<String, dynamic>;
+        if (bikeinfo.isNotEmpty){
+        return Align(alignment: Alignment .bottomLeft,
+            child: Container(
+              height: 225,
+              width: double.infinity,
+              color: Colors.grey.withOpacity(.95),
+              child: FittedBox(
+                  fit: BoxFit.contain,
+                  child: Container(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Row(children: const [Text("Current Bike")],),
+                        Row(children: [cardImage(bikeinfo['image'])],),
+                        Row( mainAxisAlignment: MainAxisAlignment.center,
+                            children:
+                            [RatingStar(rating: bikeinfo['rating'],)]),
+                        Row(mainAxisAlignment: MainAxisAlignment.center,
+                            children:[
+                              const Text("Type: ",style: TextStyle(fontWeight: FontWeight.bold),),
+                              Text("${bikeinfo['category']}"),
+                              const Text(" Year: ",style: TextStyle(fontWeight: FontWeight.bold),),
+                              Text("${bikeinfo['year']}"),
+                              const Text(" Condition: ",style: TextStyle(fontWeight: FontWeight.bold),),
+                              Text("${bikeinfo['condition']}")]),
+                        Row(mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text("Make: ",style: TextStyle(fontWeight: FontWeight.bold),),
+                            Text('${bikeinfo['make']}'),
+                            const Text(" Model: ",style: TextStyle(fontWeight: FontWeight.bold),),
+                            Text('${bikeinfo['model']}')
+                          ],),
+
+                        Row(mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text("Tags: ",style: TextStyle(fontWeight: FontWeight.bold),),
+                            Text("${bikeinfo['tags']}",
+                              overflow: TextOverflow.fade,)
+                          ],),
+                        Row(mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            ElevatedButton(child: const Text("Return Bike"),
+                              onPressed: (){
+                                Navigator.push(context, MaterialPageRoute(
+
+                                    builder: (context)=>returnBike(bikeId: snapshot.data!.id)));
+
+                              }, ),
+                            ElevatedButton(
+                              child: const Text("Report Stolen"),
+                              style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.red)),
+                              onPressed: (){
+                                // print("HERE");
+                              }, )],
+                        ),
+                      ],
+                    ),
+                  )
+              ),
+            ),);
+        }}
+        return const Center(child: CircularProgressIndicator());
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -401,15 +517,13 @@ class _GmapsState extends State<Gmaps> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
 
-      //appBar: AppBar(title: const Text("Bike Kollective"),),
-      // bottomNavigationBar: NavBar(),
       body: Stack(
-        //mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           // Google Map
           _GoogleMap(context),
           //Bike List Widget
-          Bikelist(),
+          userInfo(),
+          // Bikelist(),
           zoomButtons(),
 
         ],
