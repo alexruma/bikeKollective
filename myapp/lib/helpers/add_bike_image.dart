@@ -19,14 +19,28 @@ Future<String> uploadPic() async {
   final ImagePicker _picker = ImagePicker();
   image = await _picker.pickImage(source: ImageSource.camera);
   
-  String photoID = Uuid().v4();
+  String photoID = const Uuid().v4();
   
-  firebase_storage.Reference reference = storage.ref().child('/bikes/$photoID');
+  firebase_storage.Reference reference = storage.ref().child('/bikes/$photoID.jpg');
 
-  firebase_storage.UploadTask uploadTask = reference.putFile(File(image!.path));
+  if (image == null) {
+    return '';
+  }
+  firebase_storage.UploadTask uploadTask = reference.putFile(File(image.path));
 
   firebase_storage.TaskSnapshot taskSnapshot = await uploadTask;
 
+  // String returnURL = "";
+  
+  // await taskSnapshot.ref.getDownloadURL().then( (url) {
+  //   returnURL = url;
+  // });
+  // return returnURL;
+
   return await taskSnapshot.ref.getDownloadURL();
+  // .then((fileURL) {
+  //   returnURL = fileURL;
+  // });
+  //return returnURL;
 }
 

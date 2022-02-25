@@ -8,6 +8,14 @@ import 'package:bike_kollective/src_exports.dart';
 class AuthGate extends StatelessWidget {
   const AuthGate({Key? key}) : super(key: key);
 
+  void emailVerify() async {
+    User? user = FirebaseAuth.instance.currentUser;
+
+    if (user != null && !user.emailVerified) {
+      await user.sendEmailVerification();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final Map<String, String> env = Platform.environment;
@@ -17,6 +25,8 @@ class AuthGate extends StatelessWidget {
       EmailProviderConfiguration(),
       GoogleProviderConfiguration(clientId: '')
     ];
+
+    emailVerify();
 
     return MaterialApp(
         theme: ThemeData(
