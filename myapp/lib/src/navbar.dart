@@ -105,6 +105,7 @@ class _NavBarPageState extends State<NavBarPage> {
             context, MaterialPageRoute(builder: (context) => AddBike())
           );
         },
+        child: const Icon(Icons.add),
       ),
       body: Center(
         child: _pages.elementAt(_selectedIndex),

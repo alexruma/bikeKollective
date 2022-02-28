@@ -9,7 +9,9 @@ class BikeImage {
 
 
   Future<Icon> get photo async {
-    return _url == '' ? const Icon(Icons.image_not_supported) : Icon(Icons.check_rounded);
+    return _url == '' ? 
+      const Icon(Icons.image_not_supported, size: 40) 
+      : Icon(Icons.check_rounded, size: 40);
     
     //_url == '' ? const Icon(Icons.image) : Image.network(_url);
   }
