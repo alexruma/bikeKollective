@@ -30,7 +30,7 @@ class _NavBarPageState extends State<NavBarPage> {
   final List<Widget> _pages = [
     Gmaps(),
     MyHomePage(title: "Home"),
-    BikeGrid(),
+    BikeList(),
     AccountPage()
   ];
 
