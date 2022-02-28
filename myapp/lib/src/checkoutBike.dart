@@ -1,3 +1,4 @@
+import 'package:bike_kollective/src/stolenBike.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_image/firebase_image.dart';
@@ -65,6 +66,7 @@ class _checkoutBikeState extends State<checkoutBike> {
 
       bike.doc(widget.bikeId).update({'available': false,
                           'cur_user': FirebaseAuth.instance.currentUser?.uid,
+                          'checkoutTime': Timestamp.now()
       });
       users.doc(FirebaseAuth.instance.currentUser?.uid).update({
                  'bikeCheckedOut': widget.bikeId,
@@ -85,8 +87,9 @@ class _checkoutBikeState extends State<checkoutBike> {
           onPressed: (){
             // Pop two screens to return to map screen.
             // Works but there is a better way of doing this.
-            Navigator.of(context).pop();
-                        Navigator.of(context).pop();},)],
+
+            Navigator.popUntil(context, ModalRoute.withName('/home'));
+            },)],
         );},
       );
     }
@@ -144,7 +147,7 @@ class _checkoutBikeState extends State<checkoutBike> {
                           child: const Text("Report Stolen"),
                           style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.red)),
                           onPressed: (){
-                            print("HERE");
+                            stolenBike(context, snapshot.data[0], widget.bikeId);
                           }, )],
                       ),
 
