@@ -4,13 +4,35 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 
 class UserModel {
-  final String userID;
-  final String firstName;
-  final String lastName;
-  final String email;
+  String? userID;
+  String? firstName;
+  String? lastName;
+  String? email;
   final bool banned = false;
   final bool waiver = true;
   String? dob;
+  String? phoneNumber;
+  var bikesAdded = [];
+  String bikeCheckedOut = "";
+  // factory UserModel.fromFS(Map<String, dynamic> data) {
+  //   return UserModel(
+  //     userID: data['userID'],
+  //     firstName: data['firstName'],
+  //     lastName: data['lastName'],
+  //     email: data['email'],
+  //     dob: data['dob'],
+  //     phoneNumber: data['phoneNumber'],
+  //   );
+  // }
 
-  UserModel(this.userID, this.firstName, this.lastName, this.email);
+  UserModel(Map<String, String?> data) {
+    userID = data['userID'];
+    firstName = data['firstName'];
+    lastName = data['lastName'];
+    email = data['email'];
+    dob = data['dob'];
+    phoneNumber = data['phoneNumber'];
+  }
+
+  //UserModel(this.userID, this.email);
 }

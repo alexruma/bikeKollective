@@ -24,7 +24,11 @@ class AddUser extends ChangeNotifier {
       'firstName': userModel.firstName,
       'lastName': userModel.lastName,
       'email': userModel.email,
-      "id": userModel.userID
+      "id": userModel.userID,
+      "dob": userModel.dob,
+      "phoneNumber": userModel.phoneNumber,
+      "banned": userModel.banned,
+      "waiver": userModel.waiver,
     });
   }
 }
