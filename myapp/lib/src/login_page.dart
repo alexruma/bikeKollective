@@ -26,7 +26,7 @@ class AuthGate extends StatelessWidget {
       GoogleProviderConfiguration(clientId: '')
     ];
 
-    emailVerify();
+    // emailVerify();
 
     return MaterialApp(
         theme: ThemeData(
