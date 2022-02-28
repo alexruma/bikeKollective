@@ -108,11 +108,11 @@ class _GmapsState extends State<Gmaps> {
                 lt.LatLng(value.latitude, value.longitude));
             bikeDistance[key] = space1;
             closePoint[key] = space1 < 10;
-        }
-            );
+          }
+          );
 
-      }
-      );}
+        }
+        );}
 
     });
     return _currPosition;
@@ -163,51 +163,51 @@ class _GmapsState extends State<Gmaps> {
   initMarker(bike) {
     // Set state need to update markers on Gmap
     // Set state handled with location update.
-      var rating = bike['rating'];
-      var hue = BitmapDescriptor.hueAzure;
+    var rating = bike['rating'];
+    var hue = BitmapDescriptor.hueAzure;
 
-      // Changes the color of the icon based on the rating
-      switch (rating) {
-        case 5:
-          {
-            hue = BitmapDescriptor.hueGreen;
-          }
-          break;
-        case 4:
-          {
-            hue = BitmapDescriptor.hueAzure;
-          }
-          break;
-        case 3:
-          {
-            hue = BitmapDescriptor.hueOrange;
-          }
-          break;
-        case 2:
-          {
-            hue = BitmapDescriptor.hueYellow;
-          }
-          break;
-        case 1:
-          {
-            hue = BitmapDescriptor.hueRed;
-          }
-          break;
-        default:
-          {}
-          break;
-      }
-      var temp = (Marker(
-          markerId: MarkerId(bike.id),
-          position:
-              LatLng(bike['location'].latitude, bike['location'].longitude),
-          infoWindow: InfoWindow(title: bike['model']),
-          icon: BitmapDescriptor.defaultMarkerWithHue(hue),
-          // Markers are invisible if bike not available
-          visible: bike['available'] ? true : false
+    // Changes the color of the icon based on the rating
+    switch (rating) {
+      case 5:
+        {
+          hue = BitmapDescriptor.hueGreen;
+        }
+        break;
+      case 4:
+        {
+          hue = BitmapDescriptor.hueAzure;
+        }
+        break;
+      case 3:
+        {
+          hue = BitmapDescriptor.hueOrange;
+        }
+        break;
+      case 2:
+        {
+          hue = BitmapDescriptor.hueYellow;
+        }
+        break;
+      case 1:
+        {
+          hue = BitmapDescriptor.hueRed;
+        }
+        break;
+      default:
+        {}
+        break;
+    }
+    var temp = (Marker(
+        markerId: MarkerId(bike.id),
+        position:
+        LatLng(bike['location'].latitude, bike['location'].longitude),
+        infoWindow: InfoWindow(title: bike['model']),
+        icon: BitmapDescriptor.defaultMarkerWithHue(hue),
+        // Markers are invisible if bike not available
+        visible: bike['available'] ? true : false
 
-      ));
-      _markers[temp.markerId] = temp;
+    ));
+    _markers[temp.markerId] = temp;
 
 
   }
@@ -313,8 +313,8 @@ class _GmapsState extends State<Gmaps> {
                 var items = snapshot.data?.docs;
                 //Bikes added to dictionary
                 //Updated through location update
-                
-                
+
+
                 items?.forEach((bike) {initMarker(bike);});
 
 
@@ -327,7 +327,7 @@ class _GmapsState extends State<Gmaps> {
                     itemCount: data.size,
                     itemBuilder: (context, index) {
                       bikeLoc[data.docs[index].id] =
-                          data.docs[index]['location'];
+                      data.docs[index]['location'];
                       if (data.docs[index]['available'] != false) {
                         return Padding(
                           padding: const EdgeInsets.all(8.0),
@@ -350,17 +350,17 @@ class _GmapsState extends State<Gmaps> {
                                     children: [
                                       Row(
                                           mainAxisAlignment:
-                                              MainAxisAlignment.center,
+                                          MainAxisAlignment.center,
                                           children: [
                                             cardImage(data.docs[index]['image'])
                                           ]),
                                       Row(
                                         mainAxisAlignment:
-                                            MainAxisAlignment.center,
+                                        MainAxisAlignment.center,
                                         children: [
                                           RatingStar(
                                               rating: data.docs[index]
-                                                  ['rating']),
+                                              ['rating']),
                                         ],
                                       ),
                                       if (bikeDistance
@@ -431,7 +431,7 @@ class _GmapsState extends State<Gmaps> {
 
                                             // Will be used to select bike if within distance
                                             if (closePoint[
-                                                    data.docs[index].id] ??
+                                            data.docs[index].id] ??
                                                 false)
                                               ElevatedButton(
                                                   onPressed: () {
@@ -442,7 +442,7 @@ class _GmapsState extends State<Gmaps> {
                                                                 checkoutBike(
                                                                     bikeId: data
                                                                         .docs[
-                                                                            index]
+                                                                    index]
                                                                         .id)));
                                                   },
                                                   child: const Text(
@@ -509,84 +509,83 @@ class _GmapsState extends State<Gmaps> {
         }
         if(snapshot.data?.data() != null ){
           Map<String, dynamic> bikeinfo = snapshot.data?.data() as Map<String, dynamic>;
-        if (bikeinfo.isNotEmpty){
-          // Logic for return bike after 8 hours before 12 hours
-          if(alert.alertedTime.add(const Duration(minutes: 20)).isBefore(DateTime.now())
-          && alert.alerted == true){
-            alert.alerted = false;
-          }
-          if(alert.alerted == false && overtime(bikeinfo['checkoutTime'])){
-            WidgetsBinding.instance?.addPostFrameCallback((timeStamp) { bikeTimeAlert(context);});
-            alert.alerted = true;
-            alert.alertedTime= DateTime.now();
-          }
+          if (bikeinfo.isNotEmpty){
+            // Logic for return bike after 8 hours before 12 hours
+            if(alert.alertedTime.add(const Duration(minutes: 20)).isBefore(DateTime.now())
+                && alert.alerted == true){
+              alert.alerted = false;
+            }
+            if(alert.alerted == false && overtime(bikeinfo['checkoutTime'])){
+              WidgetsBinding.instance?.addPostFrameCallback((timeStamp) { bikeTimeAlert(context);});
+              alert.alerted = true;
+              alert.alertedTime= DateTime.now();
+            }
 
-        return Align(alignment: Alignment .bottomLeft,
-            child: Container(
-              height: 275,
-              width: double.infinity,
-              color: Colors.grey.withOpacity(.95),
-              child: FittedBox(
-                  fit: BoxFit.contain,
-                  child: Container(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Row(children: const [Text("Current Bike")],),
-                        Row(children: [cardImage(bikeinfo['image'])],),
-                        Row( mainAxisAlignment: MainAxisAlignment.center,
-                            children:
-                            [RatingStar(rating: bikeinfo['rating'],)]),
-                        Row(mainAxisAlignment: MainAxisAlignment.center,
-                            children:[
-                              const Text("Type: ",style: TextStyle(fontWeight: FontWeight.bold),),
-                              Text("${bikeinfo['category']}"),
-                              const Text(" Year: ",style: TextStyle(fontWeight: FontWeight.bold),),
-                              Text("${bikeinfo['year']}"),
-                              const Text(" Condition: ",style: TextStyle(fontWeight: FontWeight.bold),),
-                              Text("${bikeinfo['condition']}")]),
-                        Row(mainAxisAlignment: MainAxisAlignment.center,
+            return Align(alignment: Alignment .bottomLeft,
+                child: Container(
+                  height: 275,
+                  width: double.infinity,
+                  color: Colors.grey.withOpacity(.95),
+                  child: FittedBox(
+                      fit: BoxFit.contain,
+                      child: Container(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const Text("Make: ",style: TextStyle(fontWeight: FontWeight.bold),),
-                            Text('${bikeinfo['make']}'),
-                            const Text(" Model: ",style: TextStyle(fontWeight: FontWeight.bold),),
-                            Text('${bikeinfo['model']}')
-                          ],),
+                            Row(children: const [Text("Current Bike")],),
+                            Row(children: [cardImage(bikeinfo['image'])],),
+                            Row( mainAxisAlignment: MainAxisAlignment.center,
+                                children:
+                                [RatingStar(rating: bikeinfo['rating'],)]),
+                            Row(mainAxisAlignment: MainAxisAlignment.center,
+                                children:[
+                                  const Text("Type: ",style: TextStyle(fontWeight: FontWeight.bold),),
+                                  Text("${bikeinfo['category']}"),
+                                  const Text(" Year: ",style: TextStyle(fontWeight: FontWeight.bold),),
+                                  Text("${bikeinfo['year']}"),
+                                  const Text(" Condition: ",style: TextStyle(fontWeight: FontWeight.bold),),
+                                  Text("${bikeinfo['condition']}")]),
+                            Row(mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Text("Make: ",style: TextStyle(fontWeight: FontWeight.bold),),
+                                Text('${bikeinfo['make']}'),
+                                const Text(" Model: ",style: TextStyle(fontWeight: FontWeight.bold),),
+                                Text('${bikeinfo['model']}')
+                              ],),
 
-                        Row(mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Text("Tags: ",style: TextStyle(fontWeight: FontWeight.bold),),
-                            Text("${bikeinfo['tags']}",
-                              overflow: TextOverflow.fade,)
-                          ],),
-                        Row(mainAxisAlignment: MainAxisAlignment.center,
-                        children: [Text("Please return bike before ${DateFormat.jm().format(bikeinfo['checkoutTime'].toDate().add(const Duration(hours: 6)))}")],),
-                        Row(mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            ElevatedButton(child: const Text("Return Bike"),
-                              onPressed: (){
-                                Navigator.push(context, MaterialPageRoute(
+                            Row(mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Text("Tags: ",style: TextStyle(fontWeight: FontWeight.bold),),
+                                Text("${bikeinfo['tags']}",
+                                  overflow: TextOverflow.fade,)
+                              ],),
+                            Row(mainAxisAlignment: MainAxisAlignment.center,
+                              children: [Text("Please return bike before ${DateFormat.jm().format(bikeinfo['checkoutTime'].toDate().add(const Duration(hours: 6)))}")],),
+                            Row(mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                ElevatedButton(child: const Text("Return Bike"),
+                                  onPressed: (){
+                                    Navigator.push(context, MaterialPageRoute(
 
-                                    builder: (context)=>returnBike(bikeId: snapshot.data!.id)));
+                                        builder: (context)=>returnBike(bikeId: snapshot.data!.id)));
 
-                              }, ),
-                            ElevatedButton(
-                              child: const Text("Report Stolen"),
-                              style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.red)),
-                              onPressed: (){
-                                stolenBike(context, bikeinfo, userdata['bikeCheckedOut']);
-                                // print("HERE");
-                              }, )],
+                                  }, ),
+                                ElevatedButton(
+                                  child: const Text("Report Stolen"),
+                                  style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.red)),
+                                  onPressed: (){
+                                    stolenBike(context, bikeinfo, userdata['bikeCheckedOut']);
+                                  }, )],
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  )
+                      )
 
-              ),
-            );
-          }
-        }
-        return const Center(child: CircularProgressIndicator());
+                  ),
+                ));
+                }
+                }
+                return const Center(child: CircularProgressIndicator());
       },
     );
   }
@@ -620,9 +619,10 @@ class RatingStar extends StatelessWidget {
       padding: const EdgeInsets.all(10.0),
       child: Row(
           children: List.generate(5, (index) {
-        return (Icon(index >= rating ? Icons.star_border : Icons.star,
-            color: index >= rating ? Colors.yellow : Colors.yellow));
-      })),
+            return (Icon(index >= rating ? Icons.star_border : Icons.star,
+                color: index >= rating ? Colors.yellow : Colors.yellow));
+          })),
     );
   }
 }
+
