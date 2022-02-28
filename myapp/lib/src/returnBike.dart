@@ -82,6 +82,7 @@ class returnBike extends StatefulWidget {
     if(bikeReturnFields.review!="")"reviews" :FieldValue.arrayUnion([bikeReturnFields.review]) });
     users.doc(FirebaseAuth.instance.currentUser?.uid).update({
       'bikeCheckedOut': "",
+      'checkoutTime': FieldValue.delete()
     });
     return showDialog(context: context,
         useRootNavigator: false,
@@ -99,6 +100,7 @@ class returnBike extends StatefulWidget {
           onPressed: (){
           Navigator.of(context).pop();
           Navigator.of(context).pop();
+
           },)
           ],
           );
