@@ -56,8 +56,8 @@ class _NavBarPageState extends State<NavBarPage> {
   @override
   // Check if firebase_auth uid corresponds to document in db.
   void initState() {
-    asyncUidCheck().then((value) {});
     super.initState();
+    asyncUidCheck().then((value) {});
   }
 
   @override
