@@ -110,6 +110,14 @@ class _NavBarPageState extends State<NavBarPage> {
         currentIndex: _selectedIndex,
         onTap: _updateIndex,
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context, MaterialPageRoute(builder: (context) => AddBike())
+          );
+        },
+        child: const Icon(Icons.add),
+      ),
       body: Center(
         child: _pages.elementAt(_selectedIndex),
       ),

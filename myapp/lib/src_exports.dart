@@ -12,3 +12,6 @@ export 'helpers/add_user.dart';
 export 'helpers/check_user.dart';
 export 'helpers/set_up_helper.dart';
 export 'models/user_model.dart';
+export 'src/addBike.dart';
+export 'helpers/add_bike_image.dart';
+export 'models/uploadedImage.dart';
