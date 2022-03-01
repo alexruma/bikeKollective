@@ -1,16 +1,11 @@
-
 import 'dart:async';
-
 import 'package:bike_kollective/models/dropdown_rating_form_field.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_image/firebase_image.dart';
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:permission_handler/permission_handler.dart';
-
 import '../src_exports.dart';
 
 class returnBike extends StatefulWidget {

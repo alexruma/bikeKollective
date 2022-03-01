@@ -95,6 +95,24 @@ class _checkoutBikeState extends State<checkoutBike> {
     }
   }
 
+  review(context, reviewslist){
+    return Expanded(
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: SizedBox(
+          height:50,
+          child: ListView.builder(
+            scrollDirection: Axis.vertical,
+              shrinkWrap: true,
+              itemCount: reviewslist.length,
+              itemBuilder: (context, index){
+                return Text("${index+1}. ${reviewslist[index]}")
+                ;
+              }),
+        ),
+      ),
+    );
+    }
 
   @override
   Widget build(BuildContext context) {
@@ -108,51 +126,57 @@ class _checkoutBikeState extends State<checkoutBike> {
     }else{
           return Scaffold(
               appBar: AppBar(title: const Text("Checkout Bike"),),
-              body: Center(
-                  child: Column(
-                    children: [
-                      cardImage(snapshot.data[0]['image']),
-                      Row( mainAxisAlignment: MainAxisAlignment.center,
-                          children:
-                            [RatingStar(rating: snapshot.data[0]['rating'],)]),
-                      Row(mainAxisAlignment: MainAxisAlignment.center,
-                          children:[
-                        const Text("Type: ",style: TextStyle(fontWeight: FontWeight.bold),),
-                        Text("${snapshot.data[0]['category']}"),
-                        const Text(" Year: ",style: TextStyle(fontWeight: FontWeight.bold),),
-                        Text("${snapshot.data[0]['year']}"),
-                        const Text(" Condition: ",style: TextStyle(fontWeight: FontWeight.bold),),
-                        Text("${snapshot.data[0]['condition']}")]),
-                      Row(mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                        const Text("Make: ",style: TextStyle(fontWeight: FontWeight.bold),),
-                        Text('${snapshot.data[0]['make']}'),
-                        const Text(" Model: ",style: TextStyle(fontWeight: FontWeight.bold),),
-                        Text('${snapshot.data[0]['model']}')
-                      ],),
+              body: SingleChildScrollView(
+                child: Center(
+                    child: Column(
+                      children: [
+                        cardImage(snapshot.data[0]['image']),
+                        Row( mainAxisAlignment: MainAxisAlignment.center,
+                            children:
+                              [RatingStar(rating: snapshot.data[0]['rating'],)]),
+                        Row(mainAxisAlignment: MainAxisAlignment.center,
+                            children:[
+                          const Text("Type: ",style: TextStyle(fontWeight: FontWeight.bold),),
+                          Text("${snapshot.data[0]['category']}"),
+                          const Text(" Year: ",style: TextStyle(fontWeight: FontWeight.bold),),
+                          Text("${snapshot.data[0]['year']}"),
+                          const Text(" Condition: ",style: TextStyle(fontWeight: FontWeight.bold),),
+                          Text("${snapshot.data[0]['condition']}")]),
+                        Row(mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                          const Text("Make: ",style: TextStyle(fontWeight: FontWeight.bold),),
+                          Text('${snapshot.data[0]['make']}'),
+                          const Text(" Model: ",style: TextStyle(fontWeight: FontWeight.bold),),
+                          Text('${snapshot.data[0]['model']}')
+                        ],),
 
-                      Row(mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                        const Text("Tags: ",style: TextStyle(fontWeight: FontWeight.bold),),
-                        Text("${snapshot.data[0]['tags']}",
-                          overflow: TextOverflow.fade,)
-                      ],),
-                      Row(mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          ElevatedButton(child: const Text("Checkout Bike"),
+                        Row(mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                          const Text("Tags: ",style: TextStyle(fontWeight: FontWeight.bold),),
+                          Text("${snapshot.data[0]['tags']}",
+                            overflow: TextOverflow.fade,)
+                        ],),
+
+                        Row(mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            ElevatedButton(child: const Text("Checkout Bike"),
+                              onPressed: (){
+                              checkout();
+                              }, ),
+                          ElevatedButton(
+                            child: const Text("Report Stolen"),
+                            style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.red)),
                             onPressed: (){
-                            checkout();
+                              stolenBike(context, snapshot.data[0], widget.bikeId);
                             }, ),
-                        ElevatedButton(
-                          child: const Text("Report Stolen"),
-                          style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.red)),
-                          onPressed: (){
-                            stolenBike(context, snapshot.data[0], widget.bikeId);
-                          }, )],
-                      ),
 
-                    ],
-                  )));
+                          ],
+                        ),
+                        // Row(mainAxisAlignment: MainAxisAlignment.center,  children:[ review(context,snapshot.data[0]['reviews'])])
+
+                      ],
+                    )),
+              ));
     }
 
 

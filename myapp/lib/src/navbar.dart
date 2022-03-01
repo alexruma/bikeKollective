@@ -70,22 +70,22 @@ class _NavBarPageState extends State<NavBarPage> {
             padding: const EdgeInsets.all(2.0),
             child: Text(_titleText),
           )),
-          GestureDetector(
-            child: Text('Get User'),
-            onTap: () async {
-              final FirebaseAuth auth = FirebaseAuth.instance;
-              //User user = auth.currentUser;
-              print(auth.currentUser?.uid);
-              setState(() {});
-            },
-          )
+          // GestureDetector(
+          //   child: Text('Get User'),
+          //   onTap: () async {
+          //     final FirebaseAuth auth = FirebaseAuth.instance;
+          //     //User user = auth.currentUser;
+          //     print(auth.currentUser?.uid);
+          //     setState(() {});
+          //   },
+          // )
         ]),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: signOutAction,
-          )
-        ],
+        // actions: [
+        //   IconButton(
+        //     icon: const Icon(Icons.logout),
+        //     onPressed: signOutAction,
+        //   )
+        // ],
       ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,

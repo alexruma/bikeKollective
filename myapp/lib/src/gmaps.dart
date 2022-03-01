@@ -1,9 +1,7 @@
 import 'dart:async';
-
 import 'package:bike_kollective/models/bikeTimeAlert.dart';
 import 'package:bike_kollective/models/bike_model.dart';
 import 'package:bike_kollective/models/bannedAlert.dart';
-
 import 'package:bike_kollective/src/checkoutBike.dart';
 import 'package:bike_kollective/src/returnBike.dart';
 import 'package:bike_kollective/src/stolenBike.dart';
@@ -14,7 +12,6 @@ import 'package:intl/intl.dart';
 import 'package:location/location.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:http/http.dart' as http;
-
 import 'constants.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -49,7 +46,7 @@ class _GmapsState extends State<Gmaps> {
 
   Map<String, dynamic> bikeinfo = {};
 
-  final Stream<QuerySnapshot> bikes = FirebaseFirestore.instance.collection('bikes').snapshots();
+  final Stream<QuerySnapshot> bikes = FirebaseFirestore.instance.collection('bikes').where('stolen', isEqualTo: false ).snapshots();
   final Stream<DocumentSnapshot> user1 = FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser?.uid).snapshots();
   final CollectionReference currBike = FirebaseFirestore.instance.collection('bikes');
 
@@ -124,7 +121,6 @@ class _GmapsState extends State<Gmaps> {
       return "${distance.toStringAsFixed(2)} ft";
     } else {
       double distance = meters / 1609;
-
       return "${distance.toStringAsFixed(2)} miles";
     }
   }
@@ -141,24 +137,6 @@ class _GmapsState extends State<Gmaps> {
       ],
     );
   }
-
-  // createMarkers() async {
-  //   //Markers for Bike available Locations
-  //   // Calls firestore and gets bike info
-  //   FirebaseFirestore.instance.collection('bikes').get()
-  //       .then((docs) {
-  //
-  //     docs.docs.forEach((element) {
-  //       initMarker(element);
-  //     });
-  //   });
-  //
-  //   setState(() {
-  //     _markers;
-  //   });
-  // }
-
-
 
   initMarker(bike) {
     // Set state need to update markers on Gmap
@@ -208,8 +186,6 @@ class _GmapsState extends State<Gmaps> {
 
     ));
     _markers[temp.markerId] = temp;
-
-
   }
 
   moveCamera(location) async {
@@ -309,33 +285,35 @@ class _GmapsState extends State<Gmaps> {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Text('Loading');
                 }
-                final data = snapshot.requireData;
+
                 var items = snapshot.data?.docs;
                 //Bikes added to dictionary
                 //Updated through location update
-
-
                 items?.forEach((bike) {initMarker(bike);});
-
-
-
-
                 //List builder for bike list
+                items![0].id;
+
+                items.sort((a,b){
+                  var asort = bikeDistance[a.id]??00;
+                  var bsort = bikeDistance[b.id]??00;
+                  return asort.compareTo(bsort);
+                });
+
                 return ListView.builder(
                     scrollDirection: Axis.horizontal,
                     shrinkWrap: true,
-                    itemCount: data.size,
+                    itemCount: items.length,
                     itemBuilder: (context, index) {
-                      bikeLoc[data.docs[index].id] =
-                      data.docs[index]['location'];
-                      if (data.docs[index]['available'] != false) {
+                      bikeLoc[items[index].id] =
+                      items[index]['location'];
+                      if (items[index]['available'] != false) {
                         return Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: FittedBox(
                             fit: BoxFit.contain,
                             child: GestureDetector(
                               onTap: () {
-                                moveCamera(data.docs[index]['location']);
+                                moveCamera(items[index]['location']);
                               },
                               child: Container(
                                   decoration: BoxDecoration(
@@ -352,39 +330,39 @@ class _GmapsState extends State<Gmaps> {
                                           mainAxisAlignment:
                                           MainAxisAlignment.center,
                                           children: [
-                                            cardImage(data.docs[index]['image'])
+                                            cardImage(items[index]['image'])
                                           ]),
                                       Row(
                                         mainAxisAlignment:
                                         MainAxisAlignment.center,
                                         children: [
                                           RatingStar(
-                                              rating: data.docs[index]
+                                              rating: items[index]
                                               ['rating']),
                                         ],
                                       ),
                                       if (bikeDistance
-                                          .containsKey(data.docs[index].id))
-                                        bikeFromUser(data.docs[index].id),
+                                          .containsKey(items[index].id))
+                                        bikeFromUser(items[index].id),
                                       Row(children: [
                                         const Text(
                                           "Type: ",
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold),
                                         ),
-                                        Text("${data.docs[index]['category']}"),
+                                        Text("${items[index]['category']}"),
                                         const Text(
                                           " Year: ",
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold),
                                         ),
-                                        Text("${data.docs[index]['year']}"),
+                                        Text("${items[index]['year']}"),
                                         const Text(
                                           " Condition: ",
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold),
                                         ),
-                                        Text("${data.docs[index]['condition']}")
+                                        Text("${items[index]['condition']}")
                                       ]),
                                       Row(
                                         children: [
@@ -393,13 +371,13 @@ class _GmapsState extends State<Gmaps> {
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold),
                                           ),
-                                          Text('${data.docs[index]['make']}'),
+                                          Text('${items[index]['make']}'),
                                           const Text(
                                             " Model: ",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold),
                                           ),
-                                          Text('${data.docs[index]['model']}')
+                                          Text('${items[index]['model']}')
                                         ],
                                       ),
                                       Row(
@@ -410,7 +388,7 @@ class _GmapsState extends State<Gmaps> {
                                                 fontWeight: FontWeight.bold),
                                           ),
                                           Text(
-                                            "${data.docs[index]['tags']}",
+                                            "${items[index]['tags']}",
                                             overflow: TextOverflow.fade,
                                           )
                                         ],
@@ -431,7 +409,7 @@ class _GmapsState extends State<Gmaps> {
 
                                             // Will be used to select bike if within distance
                                             if (closePoint[
-                                            data.docs[index].id] ??
+                                            items[index].id] ??
                                                 false)
                                               ElevatedButton(
                                                   onPressed: () {
@@ -440,10 +418,7 @@ class _GmapsState extends State<Gmaps> {
                                                         MaterialPageRoute(
                                                             builder: (context) =>
                                                                 checkoutBike(
-                                                                    bikeId: data
-                                                                        .docs[
-                                                                    index]
-                                                                        .id)));
+                                                                    bikeId: items[index].id)));
                                                   },
                                                   child: const Text(
                                                     'Select Bike',
@@ -476,7 +451,6 @@ class _GmapsState extends State<Gmaps> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Text('Loading');
         }
-
         final userdata = snapshot.requireData;
 
         if(userdata['banned'] == true){
