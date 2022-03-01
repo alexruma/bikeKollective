@@ -32,7 +32,7 @@ Future<String> uploadPic(BuildContext context) async {
         content: Container(
           width: 100,
           height: 100,
-          child: CircularProgressIndicator()
+          child: Center(child: CircularProgressIndicator())
         )
       );
     }
