@@ -19,16 +19,20 @@ doc/api/
 *.js_
 *.js.deps
 *.js.map
-<<<<<<< HEAD
+
 
 # Avoid committing flutter plugins files
 *.flutter-plugins
-=======
+
 myapp/.flutter-plugins
 myapp/.flutter-plugins-dependencies
 myapp/lib/firebase_options.dart
 .env*
->>>>>>> origin/main
+
+myapp/lib/generated_plugin_registrant.dart
+myapp/.flutter-plugins-dependencies
+.gitignore
+
 
 # Logs
 logs
@@ -96,3 +100,4 @@ node_modules/
 
 # dotenv environment variables file
 .env
+
