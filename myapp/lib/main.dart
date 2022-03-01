@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'src_exports.dart';
@@ -41,7 +42,7 @@ class _MyAppState extends State<MyApp> {
               SignedOutAction((context) {
                 Navigator.of(context).pushReplacementNamed('/sign-in');
               }),
-            ])
+            ]),
       },
       title: 'Bike Kollective',
       theme: ThemeData(
@@ -51,7 +52,9 @@ class _MyAppState extends State<MyApp> {
                   textStyle: const TextStyle(
             fontSize: 42,
           )))),
-      home: const AuthGate(),
+      // home: const AuthGate(),
+      initialRoute:
+      FirebaseAuth.instance.currentUser == null ? '/sign-in' : '/home',
     );
   }
 }
