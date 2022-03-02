@@ -6,7 +6,7 @@ admin.initializeApp();
 
 
 
-exports.scheduleFunction = functions.pubsub.schedule('every 30 minutes').onRun(async (context)=>{
+exports.scheduleFunction = functions.pubsub.schedule('every 10 minutes').onRun(async (context)=>{
 // const bikesRef = db.collection('bikes');
 console.log("running");
 var snapshot = await admin.firestore().collection('bikes').orderBy('checkoutTime').get();

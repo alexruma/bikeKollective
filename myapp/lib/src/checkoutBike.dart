@@ -37,7 +37,6 @@ class _checkoutBikeState extends State<checkoutBike> {
   Future<Map<String, dynamic>> getUserInfo() async {
     return await users.doc(FirebaseAuth.instance.currentUser?.uid).get().then((DocumentSnapshot value){
       userinfo = value.data() as Map<String, dynamic>;
-      // print(userinfo);
       return userinfo;
     });
   }
@@ -95,6 +94,28 @@ class _checkoutBikeState extends State<checkoutBike> {
     }
   }
 
+  review(context, reviewslist){
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 5, 20, 10),
+      child: Container(
+        height: 100,
+        width: 275,
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.black)
+        ),
+        child: CupertinoScrollbar(
+          child: ListView.builder(
+            scrollDirection: Axis.vertical,
+              shrinkWrap: true,
+              itemCount: reviewslist.length,
+              itemBuilder: (context, index){
+                return Text("${index+1}. ${reviewslist[index]}")
+                ;
+              }),
+        ),
+      ),
+    );
+    }
 
   @override
   Widget build(BuildContext context) {
@@ -108,51 +129,58 @@ class _checkoutBikeState extends State<checkoutBike> {
     }else{
           return Scaffold(
               appBar: AppBar(title: const Text("Checkout Bike"),),
-              body: Center(
-                  child: Column(
-                    children: [
-                      cardImage(snapshot.data[0]['image']),
-                      Row( mainAxisAlignment: MainAxisAlignment.center,
-                          children:
-                            [RatingStar(rating: snapshot.data[0]['rating'],)]),
-                      Row(mainAxisAlignment: MainAxisAlignment.center,
-                          children:[
-                        const Text("Type: ",style: TextStyle(fontWeight: FontWeight.bold),),
-                        Text("${snapshot.data[0]['category']}"),
-                        const Text(" Year: ",style: TextStyle(fontWeight: FontWeight.bold),),
-                        Text("${snapshot.data[0]['year']}"),
-                        const Text(" Condition: ",style: TextStyle(fontWeight: FontWeight.bold),),
-                        Text("${snapshot.data[0]['condition']}")]),
-                      Row(mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                        const Text("Make: ",style: TextStyle(fontWeight: FontWeight.bold),),
-                        Text('${snapshot.data[0]['make']}'),
-                        const Text(" Model: ",style: TextStyle(fontWeight: FontWeight.bold),),
-                        Text('${snapshot.data[0]['model']}')
-                      ],),
+              body: SingleChildScrollView(
+                child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        cardImage(snapshot.data[0]['image']),
+                        Row( mainAxisAlignment: MainAxisAlignment.center,
+                            children:
+                              [RatingStar(rating: snapshot.data[0]['rating'],)]),
+                        Row(mainAxisAlignment: MainAxisAlignment.center,
+                            children:[
+                          const Text("Type: ",style: TextStyle(fontWeight: FontWeight.bold),),
+                          Text("${snapshot.data[0]['category']}"),
+                          const Text(" Year: ",style: TextStyle(fontWeight: FontWeight.bold),),
+                          Text("${snapshot.data[0]['year']}"),
+                          const Text(" Condition: ",style: TextStyle(fontWeight: FontWeight.bold),),
+                          Text("${snapshot.data[0]['condition']}")]),
+                        Row(mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                          const Text("Make: ",style: TextStyle(fontWeight: FontWeight.bold),),
+                          Text('${snapshot.data[0]['make']}'),
+                          const Text(" Model: ",style: TextStyle(fontWeight: FontWeight.bold),),
+                          Text('${snapshot.data[0]['model']}')
+                        ],),
 
-                      Row(mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                        const Text("Tags: ",style: TextStyle(fontWeight: FontWeight.bold),),
-                        Text("${snapshot.data[0]['tags']}",
-                          overflow: TextOverflow.fade,)
-                      ],),
-                      Row(mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          ElevatedButton(child: const Text("Checkout Bike"),
+                        Row(mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                          const Text("Tags: ",style: TextStyle(fontWeight: FontWeight.bold),),
+                          Text("${snapshot.data[0]['tags']}",
+                            overflow: TextOverflow.fade,)
+                        ],),
+                        Row(mainAxisAlignment: MainAxisAlignment.center,
+                          children: const [
+                            Text("Bike Reviews",style: TextStyle(fontSize: 18),)],),
+                        Row(mainAxisAlignment: MainAxisAlignment.center,  children:[ review(context,snapshot.data[0]['reviews'])]),
+                        Row(mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            ElevatedButton(child: const Text("Checkout Bike"),
+                              onPressed: (){
+                              checkout();
+                              }, ),
+                          ElevatedButton(
+                            child: const Text("Report Stolen"),
+                            style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.red)),
                             onPressed: (){
-                            checkout();
+                              stolenBike(context, snapshot.data[0], widget.bikeId);
                             }, ),
-                        ElevatedButton(
-                          child: const Text("Report Stolen"),
-                          style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.red)),
-                          onPressed: (){
-                            stolenBike(context, snapshot.data[0], widget.bikeId);
-                          }, )],
-                      ),
-
-                    ],
-                  )));
+                          ],
+                        ),
+                      ],
+                    )),
+              ));
     }
 
 

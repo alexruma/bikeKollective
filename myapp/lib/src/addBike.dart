@@ -1,5 +1,7 @@
 import 'package:bike_kollective/helpers/add_bike_image.dart';
 import 'package:async/async.dart';
+import 'package:bike_kollective/models/dropdown_rating_form_field.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -17,10 +19,11 @@ class BikeFields {
   String lock = '';
   int year = 2022;
   String image = '';
+  int rating = 1;
 
   @override
   String toString() {
-    return 'Model: $model, Make: $make, Condition: $condition, Category: $category, Lock: $lock, Year: $year, Image: $image';
+    return 'Model: $model, Make: $make, Condition: $condition, Category: $category, Lock: $lock, Year: $year, Image: $image, rating: $rating';
   }
 }
 
@@ -71,9 +74,9 @@ class _AddBikeState extends State<AddBike> {
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        title: const Text('Add Bike')
-      ),
+      // appBar: AppBar(
+      //   title: const Text('Add Bike')
+      // ),
       body: SingleChildScrollView(
         reverse: true,
         padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
@@ -192,6 +195,15 @@ class _AddBikeState extends State<AddBike> {
                         )
                       ),
                       const SizedBox(height: 10),
+                      DropdownRatingFormField(maxRating: 5,
+                          validator: (value){
+                        if(value == null){
+                          return 'Please select a rating';
+                        }
+                          }, onSaved: (value){
+                        bike.rating = value;
+                          }),
+                      const SizedBox(height: 10),
                       TextFormField(
                         validator: (value) {
                           if (value == null || value.isEmpty) {
@@ -225,8 +237,9 @@ class _AddBikeState extends State<AddBike> {
                       ),
                       const SizedBox(height: 10),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: <Widget>[
+                        mainAxisAlignment: MainAxisAlignment.center ,
+                        children: <Widget>[const Text("Take a photo of the bike.",
+                        style: TextStyle(fontSize: 20),),
                           IconButton(
                             onPressed: () async { 
                               await bikeImage.addPhoto(context);
@@ -237,6 +250,8 @@ class _AddBikeState extends State<AddBike> {
                             icon: const Icon(Icons.camera_alt, size: 40)
                           ),
                           _icon,
+
+
                         ],
                       ),
                       Row(
@@ -247,7 +262,7 @@ class _AddBikeState extends State<AddBike> {
                           child: const Text('Submit'),
                           ),
                           ElevatedButton(
-                            onPressed: () => Navigator.pop(context),
+                            onPressed: () => Navigator.of(context).pushNamedAndRemoveUntil('/home', (route) => false),
                             child: const Text('Cancel'),
                           )
                         ]
@@ -282,14 +297,15 @@ class _AddBikeState extends State<AddBike> {
         'model': bike.model,
         'year': bike.year,
         'stolen': false,
-        'rating': 1,
+        'rating': bike.rating,
         'tags': [],
         'reviews': [],
-        'id': 1
+        'id': 1,
+        'owner': FirebaseAuth.instance.currentUser?.uid
       }).then((value) => print("Bike Added"))
       .catchError((error) => print("Failed to add bike!"));
       // print(bike.image);
-      Navigator.pop(context);
+      Navigator.of(context).pushNamedAndRemoveUntil('/home', (route) => false);
     }
   }
 }

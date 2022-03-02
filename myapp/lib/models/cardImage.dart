@@ -1,5 +1,3 @@
-
-
 import 'package:firebase_image/firebase_image.dart';
 import 'package:flutter/cupertino.dart';
 
