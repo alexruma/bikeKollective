@@ -29,14 +29,14 @@ class _NavBarPageState extends State<NavBarPage> {
 
   final List<Widget> _pages = [
     Gmaps(),
-    MyHomePage(title: "Home"),
+    AddBike(),
     BikeList(),
     AccountPage()
   ];
 
   final List<String> _titles = const [
     "Bike Kollective",
-    "Bike Search",
+    "Add Bike",
     "Bike List",
     "My Account"
   ];
@@ -70,22 +70,9 @@ class _NavBarPageState extends State<NavBarPage> {
             padding: const EdgeInsets.all(2.0),
             child: Text(_titleText),
           )),
-          // GestureDetector(
-          //   child: Text('Get User'),
-          //   onTap: () async {
-          //     final FirebaseAuth auth = FirebaseAuth.instance;
-          //     //User user = auth.currentUser;
-          //     print(auth.currentUser?.uid);
-          //     setState(() {});
-          //   },
-          // )
+
         ]),
-        // actions: [
-        //   IconButton(
-        //     icon: const Icon(Icons.logout),
-        //     onPressed: signOutAction,
-        //   )
-        // ],
+
       ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
@@ -95,8 +82,8 @@ class _NavBarPageState extends State<NavBarPage> {
             label: 'Map',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.search),
-            label: 'Bike Search',
+            icon: Icon(Icons.add),
+            label: 'Add Bike',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.directions_bike),
@@ -110,14 +97,7 @@ class _NavBarPageState extends State<NavBarPage> {
         currentIndex: _selectedIndex,
         onTap: _updateIndex,
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context, MaterialPageRoute(builder: (context) => AddBike())
-          );
-        },
-        child: const Icon(Icons.add),
-      ),
+
       body: Center(
         child: _pages.elementAt(_selectedIndex),
       ),

@@ -534,7 +534,7 @@ class _GmapsState extends State<Gmaps> {
                                   overflow: TextOverflow.fade,)
                               ],),
                             Row(mainAxisAlignment: MainAxisAlignment.center,
-                              children: [Text("Please return bike before ${DateFormat.jm().format(bikeinfo['checkoutTime'].toDate().add(const Duration(hours: 6)))}")],),
+                              children: [Text("Please return bike before ${DateFormat.jm().format(bikeinfo['checkoutTime'].toDate().add(const Duration(hours: 8)))}")],),
                             Row(mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 ElevatedButton(child: const Text("Return Bike"),

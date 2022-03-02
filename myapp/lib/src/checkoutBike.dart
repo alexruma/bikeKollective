@@ -37,7 +37,6 @@ class _checkoutBikeState extends State<checkoutBike> {
   Future<Map<String, dynamic>> getUserInfo() async {
     return await users.doc(FirebaseAuth.instance.currentUser?.uid).get().then((DocumentSnapshot value){
       userinfo = value.data() as Map<String, dynamic>;
-      // print(userinfo);
       return userinfo;
     });
   }
@@ -96,11 +95,15 @@ class _checkoutBikeState extends State<checkoutBike> {
   }
 
   review(context, reviewslist){
-    return Expanded(
-      child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: SizedBox(
-          height:50,
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 5, 20, 10),
+      child: Container(
+        height: 100,
+        width: 275,
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.black)
+        ),
+        child: CupertinoScrollbar(
           child: ListView.builder(
             scrollDirection: Axis.vertical,
               shrinkWrap: true,
@@ -129,6 +132,7 @@ class _checkoutBikeState extends State<checkoutBike> {
               body: SingleChildScrollView(
                 child: Center(
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         cardImage(snapshot.data[0]['image']),
                         Row( mainAxisAlignment: MainAxisAlignment.center,
@@ -156,7 +160,10 @@ class _checkoutBikeState extends State<checkoutBike> {
                           Text("${snapshot.data[0]['tags']}",
                             overflow: TextOverflow.fade,)
                         ],),
-
+                        Row(mainAxisAlignment: MainAxisAlignment.center,
+                          children: const [
+                            Text("Bike Reviews",style: TextStyle(fontSize: 18),)],),
+                        Row(mainAxisAlignment: MainAxisAlignment.center,  children:[ review(context,snapshot.data[0]['reviews'])]),
                         Row(mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             ElevatedButton(child: const Text("Checkout Bike"),
@@ -169,11 +176,8 @@ class _checkoutBikeState extends State<checkoutBike> {
                             onPressed: (){
                               stolenBike(context, snapshot.data[0], widget.bikeId);
                             }, ),
-
                           ],
                         ),
-                        // Row(mainAxisAlignment: MainAxisAlignment.center,  children:[ review(context,snapshot.data[0]['reviews'])])
-
                       ],
                     )),
               ));

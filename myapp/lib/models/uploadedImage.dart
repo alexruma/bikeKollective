@@ -10,8 +10,8 @@ class BikeImage {
 
   Icon get photo {
     return _url == '' ? 
-      const Icon(Icons.image_not_supported, size: 40) 
-      : const Icon(Icons.check_rounded, size: 40);
+      const Icon(Icons.image_not_supported, size: 40, color: Colors.red,)
+      : const Icon(Icons.check_rounded, size: 40,color: Colors.green,);
   }
 
   String get url => _url;
