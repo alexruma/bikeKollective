@@ -102,3 +102,4 @@ node_modules/
 .env
 
 generated_plugin_registrant.dart
+*.flutter-plugins
