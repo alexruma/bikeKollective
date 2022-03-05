@@ -106,7 +106,7 @@ class _AccountPageState extends State<AccountPage> {
           Padding(
             padding: const EdgeInsets.all(14.0),
             child: Row(mainAxisAlignment: MainAxisAlignment.center,
-              children: [Text("${user['first']} ${user["last"]}"
+              children: [Text("${user['firstName']} ${user["lastName"]}"
               ,style: const TextStyle(fontSize: 18),),
 
               ],)
