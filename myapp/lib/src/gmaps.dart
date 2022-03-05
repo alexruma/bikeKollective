@@ -37,6 +37,7 @@ class _GmapsState extends State<Gmaps> {
 
   // Dictionary of distance from user to bike
   Map<String, dynamic> bikeDistance = {};
+
   // Dictionary of bike locations
   Map<String, GeoPoint> bikeLoc = {};
 
@@ -451,6 +452,7 @@ class _GmapsState extends State<Gmaps> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Text('Loading');
         }
+        if(snapshot.hasData && snapshot.data!.exists){
         final userdata = snapshot.requireData;
 
         if(userdata['banned'] == true){
@@ -459,11 +461,12 @@ class _GmapsState extends State<Gmaps> {
           // Unban with firestore.
           WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {bannedAlert(context); });
         }
-        if(userdata['bikeCheckedOut']!= ""){
+        if(userdata['bikeCheckedOut'] != ""){
 
           // Clear all markers and show current bike
           _markers.clear();
           return user_bike_check(userdata);
+        }
         }
         return Bikelist();
       },

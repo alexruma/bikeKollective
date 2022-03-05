@@ -29,6 +29,7 @@ class AddUser extends ChangeNotifier {
       "phoneNumber": userModel.phoneNumber,
       "banned": userModel.banned,
       "waiver": userModel.waiver,
+      "bikeCheckedOut": ""
     });
   }
 }
