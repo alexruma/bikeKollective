@@ -63,16 +63,8 @@ class _SingleBikeState extends State<SingleBike> {
                   fieldRow("year", data['year']),
                   fieldRow("user rating", data['rating']),
                   Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        tagDisplay("old"),
-                        tagDisplay('good tires'),
-                        tagDisplay('heavy')
-                      ],
-                    ),
-                  ),
+                      padding: const EdgeInsets.all(8.0),
+                      child: allTagsDisplay(data['tags'])),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: ElevatedButton(
@@ -118,6 +110,7 @@ class _SingleBikeState extends State<SingleBike> {
     Navigator.of(context).pop();
   }
 
+  // Returns Row populated with formatted and stylized piece of data from bike document.
   Widget fieldRow(String fieldName, dataItem) {
     if (dataItem == null) {
       return Padding(
@@ -166,7 +159,8 @@ class _SingleBikeState extends State<SingleBike> {
     }
   }
 
-  Widget tagDisplay(tag) {
+  // Display a single tag from the bike's tag array.
+  Widget singleTagDisplay(tag) {
     return Stack(
       children: [
         Container(
@@ -194,5 +188,21 @@ class _SingleBikeState extends State<SingleBike> {
         ),
       ],
     );
+  }
+
+  // Display all of bike's tags in a Column containing Rows consisting of 4 tagDisplays
+  allTagsDisplay(tagList) {
+    List<Widget> columnChildren = [];
+    List<Widget> rowChildren = [];
+
+    for (int i = 0; i < tagList.length; i++) {
+      rowChildren.add(singleTagDisplay(tagList[i]));
+      if ((i + 1) % 4 == 0) {
+        columnChildren.add(Row(children: rowChildren));
+        rowChildren = [];
+      }
+    }
+    columnChildren.add(Row(children: rowChildren));
+    return Column(children: columnChildren);
   }
 }
