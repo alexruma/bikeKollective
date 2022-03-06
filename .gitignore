@@ -101,5 +101,5 @@ node_modules/
 # dotenv environment variables file
 .env
 
-generated_plugin_registrant.dart
+*generated_plugin_registrant.dart
 *.flutter-plugins
