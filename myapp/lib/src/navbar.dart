@@ -1,11 +1,10 @@
-import 'package:bike_kollective/src/account.dart';
 import 'package:bike_kollective/src/bikes.dart';
 import 'package:bike_kollective/src/set_up_account.dart';
-import 'package:firebase_core/firebase_core.dart';
+
 import 'package:flutter/material.dart';
 import 'package:bike_kollective/src_exports.dart';
-import 'package:flutterfire_ui/auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:bike_kollective/src_exports.dart';
 
 class NavBarPage extends StatefulWidget {
   const NavBarPage({

@@ -29,7 +29,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
+  flutter_rating_bar: ^4.0.0
   google_maps_flutter: ^2.1.1
   #google_maps_flutter_web: ^0.3.2 #Might not be needed
   #flutter_polyline_points: ^1.0.0 # Might not be needed

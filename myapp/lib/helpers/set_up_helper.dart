@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:bike_kollective/src_exports.dart';
 
 // Class with widgets and message text for set_up_account.dart
 class SetUpHelper {
@@ -46,6 +47,29 @@ class SetUpHelper {
           validator: (value) {
             if (value == null || value.length < 10) {
               return 'Please enter a 10 digit phone number';
+            }
+          }),
+    );
+  }
+
+  // Generates unformatted custom FormFieldText widget that allows all characters.
+  static Widget tagFormField(label, bikeID, existingTags) {
+    return Padding(
+      padding: const EdgeInsets.all(3.0),
+      child: TextFormField(
+          autofocus: true,
+          decoration: InputDecoration(
+            labelText: label,
+            border: const UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.orange)),
+          ),
+          onSaved: (value) {
+            BikeUpdate tagUpdate = BikeUpdate(bikeDocId: bikeID);
+            tagUpdate.updateBikeTags(value, existingTags);
+          },
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'This field cannot be blank.';
             }
           }),
     );

@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:bike_kollective/src_exports.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class SingleBike extends StatefulWidget {
   SingleBike({Key? key, required this.bikeDoc, this.bikeId}) : super(key: key);
@@ -16,7 +17,10 @@ class SingleBike extends StatefulWidget {
 }
 
 class _SingleBikeState extends State<SingleBike> {
+  final formKey = GlobalKey<FormState>();
   var bikeData;
+  // Ensures user does not rate bike multiple times.
+  bool rated = false;
 
   void initState() {
     super.initState();
@@ -35,74 +39,93 @@ class _SingleBikeState extends State<SingleBike> {
           builder:
               (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
             if (snapshot.hasError) {
-              return Text("Something went wrong");
+              return const Text("Something went wrong");
             }
 
             if (snapshot.hasData && !snapshot.data!.exists) {
-              return Text("Document does not exist");
+              return const Text("Document does not exist");
             } else {
               Map<String, dynamic> data =
-                  snapshot.data!.data() as Map<String, dynamic>;
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  bigRow("id", snapshot.data?.id),
-                  Image(
-                    image: FirebaseImage(
-                      data['image'],
+                  snapshot.data?.data() as Map<String, dynamic>;
+              return SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(40), // Image border
+                      child: SizedBox.fromSize(
+                        size: const Size.fromRadius(118), // Image radius
+
+                        child: Image(
+                          image: FirebaseImage(
+                            data['image'],
+                          ),
+                          width: 200,
+                          height: 200,
+                        ),
+                      ),
                     ),
-                    width: 200,
-                    height: 200,
-                  ),
-                  fieldRow("available", data['available']),
-                  fieldRow("category", data['category']),
-                  fieldRow("condition", data['condition']),
-                  fieldRow("make", data['make']),
-                  fieldRow("make", data['make']),
-                  fieldRow("year", data['year']),
-                  fieldRow("user rating", data['rating']),
-                  Padding(
+                    fieldRow("available", data['available']),
+                    fieldRow("category", data['category']),
+                    fieldRow("condition", data['condition']),
+                    fieldRow("make", data['make']),
+                    fieldRow("make", data['make']),
+                    fieldRow("year", data['year']),
+                    fieldRow("user rating", data['rating']),
+                    const Text("Your Rating: "),
+                    RatingBar.builder(
+                      initialRating: 3,
+                      minRating: 1,
+                      direction: Axis.horizontal,
+                      allowHalfRating: true,
+                      itemCount: 5,
+                      itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
+                      itemBuilder: (context, _) => const Icon(
+                        Icons.star,
+                        color: Colors.deepPurpleAccent,
+                      ),
+                      onRatingUpdate: (rating) {
+                        if (rated == false) {
+                          BikeUpdate ratingUpdate =
+                              BikeUpdate(bikeDocId: snapshot.data?.id);
+                          ratingUpdate.updateBikeRating(
+                              rating, data['rating'], data['numberOfRatings']);
+                          setState(() {
+                            rated = true;
+                          });
+                        } else {
+                          showRatingDialog();
+                        }
+                      },
+                    ),
+                    Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: allTagsDisplay(data['tags'])),
+                    Form(
+                        key: formKey,
+                        child: SetUpHelper.tagFormField(
+                            "Add Tag", snapshot.data?.id, data['tags'])),
+                    ElevatedButton(
+                        onPressed: addTagPress, child: const Text("Add")),
+                    Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: allTagsDisplay(data['tags'])),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ElevatedButton(
-                        onPressed: popRoute, child: Text("Go Back")),
-                  ),
-                ],
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ElevatedButton(
+                          onPressed: popRoute, child: const Text("Go Back")),
+                    ),
+                  ],
+                ),
               );
             }
           }),
     );
-    // return StreamBuilder(
-    //     stream: FirebaseFirestore.instance
-    //         .collection("bikes")
-    //         .doc(widget.bikeId)
-    //         .snapshots(),
-    //     builder: (content, snapshot) {
-    //       if (snapshot.hasData) {
-    //         var bikeDocument = snapshot.data;
-    //         return Scaffold(
-    //           body: Column(
-    //             children: [
-    //               Text(snapshot.data?.get('category')),
-    //               ElevatedButton(onPressed: popRoute, child: Text("Go Back")),
-    //             ],
-    //           ),
-    //         );
-    //       } else {
-    //         return Scaffold(
-    //           body: Column(
-    //             children: [
-    //               ElevatedButton(onPressed: popRoute, child: Text("Go Back")),
-    //               //Text("widget.bikeDoc['Category']"),
-    //               Text(bikeData['category'])
-    //             ],
-    //           ),
-    //         );
-    //       }
-    //     });
   }
 
   // Function to return back to bike list page.
@@ -117,7 +140,10 @@ class _SingleBikeState extends State<SingleBike> {
         padding: const EdgeInsets.only(top: 8),
         child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
           Text('$fieldName: ',
-              style: const TextStyle(fontWeight: FontWeight.bold)),
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.deepPurpleAccent,
+              )),
           const Text('N/A'),
         ]),
       );
@@ -125,9 +151,16 @@ class _SingleBikeState extends State<SingleBike> {
       return Padding(
         padding: const EdgeInsets.only(top: 8),
         child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+          // Field name row.
           Text('$fieldName: ',
-              style: const TextStyle(fontWeight: FontWeight.bold)),
-          Text(dataItem.toString()),
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              )),
+          // Field data row.
+          Text(dataItem.toString(),
+              style: const TextStyle(
+                  fontWeight: FontWeight.bold, color: Colors.blue)),
         ]),
       );
     }
@@ -145,16 +178,14 @@ class _SingleBikeState extends State<SingleBike> {
         ]),
       );
     } else {
-      return Container(
-        child: Padding(
-          padding: const EdgeInsets.only(bottom: 22),
-          child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-            Text('$fieldName: ',
-                style:
-                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 24)),
-            Text(dataItem.toString()),
-          ]),
-        ),
+      return Padding(
+        padding: const EdgeInsets.only(bottom: 22),
+        child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+          Text('$fieldName: ',
+              style:
+                  const TextStyle(fontWeight: FontWeight.bold, fontSize: 24)),
+          Text(dataItem.toString()),
+        ]),
       );
     }
   }
@@ -190,19 +221,39 @@ class _SingleBikeState extends State<SingleBike> {
     );
   }
 
-  // Display all of bike's tags in a Column containing Rows consisting of 4 tagDisplays
+  // Display all of bike's tags in a Column containing Rows consisting of 3 tagDisplays
   allTagsDisplay(tagList) {
     List<Widget> columnChildren = [];
     List<Widget> rowChildren = [];
 
     for (int i = 0; i < tagList.length; i++) {
       rowChildren.add(singleTagDisplay(tagList[i]));
-      if ((i + 1) % 4 == 0) {
-        columnChildren.add(Row(children: rowChildren));
+      if ((i + 1) % 3 == 0) {
+        columnChildren.add(Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: rowChildren));
         rowChildren = [];
       }
     }
-    columnChildren.add(Row(children: rowChildren));
-    return Column(children: columnChildren);
+    columnChildren.add(Row(
+        mainAxisAlignment: MainAxisAlignment.center, children: rowChildren));
+    return Column(
+        mainAxisAlignment: MainAxisAlignment.center, children: columnChildren);
+  }
+
+  void showRatingDialog() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) => const AlertDialog(
+            content: Text("You've already rated this bike.",
+                style: TextStyle(fontWeight: FontWeight.bold))));
+  }
+
+  void addTagPress() {
+    print("Adding");
+    if (formKey.currentState!.validate()) {
+      // If all forms validated and waiver checked, save state.
+      formKey.currentState!.save();
+    }
   }
 }
