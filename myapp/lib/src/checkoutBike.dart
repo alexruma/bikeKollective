@@ -5,6 +5,7 @@ import 'package:firebase_image/firebase_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../helpers/RatingStar.dart';
 import '../src_exports.dart';
 
 class checkoutBike extends StatefulWidget {
@@ -28,7 +29,6 @@ class _checkoutBikeState extends State<checkoutBike> {
   Future<Map<String, dynamic>> getBikeInfo () async {
     return await bike.doc(widget.bikeId).get().then((DocumentSnapshot value){
       bikeinfo = value.data() as Map<String, dynamic>;
-      // print(bikeinfo);
       return bikeinfo;
     }
     );
@@ -49,16 +49,17 @@ class _checkoutBikeState extends State<checkoutBike> {
   Widget cardImage(image){
     if(image == ""){
       return const Image(image: AssetImage('assets/images/bike-icon.png'),
-        width: 200,
-        height: 100
+        width: 300,
+        height: 200
         ,);
     } else{
       return Image(image: FirebaseImage(image),
         width: 300,
-        height: 200
-        ,);
+        height: 200,
+      );
     }
   }
+
 
   checkout(){
     if(userinfo["bikeCheckedOut"] == "" && bikeinfo["available"] == true){
@@ -84,9 +85,6 @@ class _checkoutBikeState extends State<checkoutBike> {
           ),
           actions: <Widget>[TextButton(child: const Text("Exit"),
           onPressed: (){
-            // Pop two screens to return to map screen.
-            // Works but there is a better way of doing this.
-
             Navigator.popUntil(context, ModalRoute.withName('/home'));
             },)],
         );},
@@ -95,6 +93,7 @@ class _checkoutBikeState extends State<checkoutBike> {
   }
 
   review(context, reviewslist){
+    reviewslist.remove("");
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 5, 20, 10),
       child: Container(
@@ -103,7 +102,10 @@ class _checkoutBikeState extends State<checkoutBike> {
         decoration: BoxDecoration(
           border: Border.all(color: Colors.black)
         ),
-        child: CupertinoScrollbar(
+        child:
+            reviewslist.length == 0 ?
+                const Center(child: Text("No reviews Available")):
+        CupertinoScrollbar(
           child: ListView.builder(
             scrollDirection: Axis.vertical,
               shrinkWrap: true,
@@ -162,20 +164,29 @@ class _checkoutBikeState extends State<checkoutBike> {
                         ],),
                         Row(mainAxisAlignment: MainAxisAlignment.center,
                           children: const [
-                            Text("Bike Reviews",style: TextStyle(fontSize: 18),)],),
+                            Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Text("Bike Reviews",style: TextStyle(fontSize: 18),),
+                            )],),
                         Row(mainAxisAlignment: MainAxisAlignment.center,  children:[ review(context,snapshot.data[0]['reviews'])]),
                         Row(mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            ElevatedButton(child: const Text("Checkout Bike"),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: ElevatedButton(child: const Text("Checkout Bike"),
+                                onPressed: (){
+                                checkout();
+                                }, ),
+                            ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: ElevatedButton(
+                              child: const Text("Report Stolen"),
+                              style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.red)),
                               onPressed: (){
-                              checkout();
+                                stolenBike(context, snapshot.data[0], widget.bikeId);
                               }, ),
-                          ElevatedButton(
-                            child: const Text("Report Stolen"),
-                            style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.red)),
-                            onPressed: (){
-                              stolenBike(context, snapshot.data[0], widget.bikeId);
-                            }, ),
+                          ),
                           ],
                         ),
                       ],

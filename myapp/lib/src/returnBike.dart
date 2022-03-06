@@ -6,6 +6,7 @@ import 'package:firebase_image/firebase_image.dart';
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 import 'package:flutter/cupertino.dart';
+import '../helpers/RatingStar.dart';
 import '../src_exports.dart';
 
 class returnBike extends StatefulWidget {
