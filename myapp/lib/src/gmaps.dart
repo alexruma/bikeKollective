@@ -16,6 +16,7 @@ import 'package:latlong2/latlong.dart' as lt;
 import '../helpers/RatingStar.dart';
 import '../helpers/distanceHelpers.dart';
 import '../models/cardImage.dart';
+import 'package:bike_kollective/src_exports.dart';
 
 class Gmaps extends StatefulWidget {
   const Gmaps({Key? key}) : super(key: key);
@@ -352,7 +353,15 @@ class _GmapsState extends State<Gmaps> {
                                           children: [
                                             ElevatedButton(
                                               style: const ButtonStyle(),
-                                              onPressed: () {},
+                                              onPressed: () =>
+                                                  Navigator.of(context).push(
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              SingleBike(
+                                                                bikeId:
+                                                                    items[index]
+                                                                        .id,
+                                                              ))),
                                               child: const Text(
                                                 'View Bike',
                                                 style: TextStyle(
@@ -417,13 +426,13 @@ class _GmapsState extends State<Gmaps> {
         if (snapshot.hasData && snapshot.data!.exists) {
           final userdata = snapshot.requireData;
 
-          if (FirebaseAuth.instance.currentUser?.emailVerified == false &&
-              FirebaseAuth.instance.currentUser?.uid !=
-                  'D3lVDIPhhZNoQJb24o1GtQ1HXCx2') {
-            WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
-              emailAlert(context);
-            });
-          }
+          // if (FirebaseAuth.instance.currentUser?.emailVerified == false &&
+          //     FirebaseAuth.instance.currentUser?.uid !=
+          //         'D3lVDIPhhZNoQJb24o1GtQ1HXCx2') {
+          //   WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+          //     emailAlert(context);
+          //   });
+          // }
 
           if (userdata['banned'] == true) {
             // If the user is banned show a dialog

@@ -18,7 +18,8 @@ class _SetUpPageState extends State<SetUpPage> {
 
   // Map that acts as temp object to hold form input and then is passed as argument for UserModel constructor.
   Map<String, String?> userMap = {
-    "userID": FirebaseAuth.instance.currentUser?.uid
+    "userID": FirebaseAuth.instance.currentUser?.uid,
+    "email": FirebaseAuth.instance.currentUser?.email
   };
 
   // Bool that remains false unless user has checked box stating they agree to waiver.
@@ -53,14 +54,13 @@ class _SetUpPageState extends State<SetUpPage> {
                   key: formKey,
                   child: Column(
                     children: [
+                      // Input fields:
                       SetUpHelper.customFormFieldText(
                           "First Name", "firstName", userMap),
                       SetUpHelper.customFormFieldText(
                           "Last Name", "lastName", userMap),
                       SetUpHelper.customFormFieldPhone(
                           "Cell Phone Number", "phoneNumber", userMap),
-                      SetUpHelper.customFormFieldText(
-                          "Date of Birth", "dob", userMap),
                       Row(
                         children: [
                           const Text(

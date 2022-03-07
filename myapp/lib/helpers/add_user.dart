@@ -15,11 +15,6 @@ class AddUser extends ChangeNotifier {
       FirebaseFirestore.instance.collection('users');
 
   Future updateUserData() async {
-    // await userCollection.add({
-    //   'name': userModel.name,
-    //   'email': userModel.email,
-    //   "id": userModel.userID
-    // });
     await userCollection.doc(userModel.userID).set({
       'firstName': userModel.firstName,
       'lastName': userModel.lastName,

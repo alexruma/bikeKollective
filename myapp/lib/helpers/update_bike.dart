@@ -7,14 +7,15 @@ import '/../models/user_model.dart';
 class BikeUpdate {
   final String? bikeDocId;
 
-  BikeUpdate({required this.bikeDocId}) {
-    //updateBikeData();
-  }
+  BikeUpdate({required this.bikeDocId});
+
   final CollectionReference userCollection =
       FirebaseFirestore.instance.collection('bikes');
 
+  // Call to update  bike rating.
   Future updateBikeRating(newRating, oldRating, numberOfRatings) async {
     numberOfRatings += 1;
+    // Calculate new average rating.
     var newAvgRating =
         ((newRating * (numberOfRatings - 1)) + oldRating) / numberOfRatings;
 
@@ -24,6 +25,7 @@ class BikeUpdate {
     });
   }
 
+  // Adds a single new tage to the tags field.
   Future updateBikeTags(newTag, oldTags) async {
     oldTags.add(newTag);
     return await userCollection.doc(bikeDocId).update({"tags": oldTags});
