@@ -4,6 +4,7 @@ import 'package:bike_kollective/models/bannedAlert.dart';
 import 'package:bike_kollective/models/emailAlert.dart';
 import 'package:bike_kollective/src/checkoutBike.dart';
 import 'package:bike_kollective/src/returnBike.dart';
+import 'package:bike_kollective/src/single_bike.dart';
 import 'package:bike_kollective/src/stolenBike.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -338,9 +339,12 @@ class _GmapsState extends State<Gmaps> {
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold),
                                           ),
-                                          Text(
-                                            "${items[index]['tags']}",
-                                            overflow: TextOverflow.fade,
+                                          Expanded(
+                                            child: Text(
+                                              "${items[index]['tags']}",
+                                              overflow: TextOverflow.clip,
+                                              softWrap: false,
+                                            ),
                                           )
                                         ],
                                       ),
@@ -352,7 +356,9 @@ class _GmapsState extends State<Gmaps> {
                                           children: [
                                             ElevatedButton(
                                               style: const ButtonStyle(),
-                                              onPressed: () {},
+                                              onPressed: () {
+                                                Navigator.push(context,MaterialPageRoute(builder: (context)=> SingleBike(bikeDoc: items[index], bikeId: items[index].id, )));
+                                              },
                                               child: const Text(
                                                 'View Bike',
                                                 style: TextStyle(
@@ -365,14 +371,8 @@ class _GmapsState extends State<Gmaps> {
                                                 false)
                                               ElevatedButton(
                                                 onPressed: () {
-                                                  Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              checkoutBike(
-                                                                  bikeId: items[
-                                                                          index]
-                                                                      .id)));
+                                                  Navigator.push(context, MaterialPageRoute(builder: (context) =>
+                                                              checkoutBike(bikeId: items[index].id)));
                                                 },
                                                 child: const Text(
                                                   'Checkout Bike',
@@ -540,10 +540,9 @@ class _GmapsState extends State<Gmaps> {
                                 "Tags: ",
                                 style: TextStyle(fontWeight: FontWeight.bold),
                               ),
-                              Text(
-                                "${bikeinfo['tags']}",
-                                overflow: TextOverflow.fade,
-                              )
+                              SizedBox(
+                                width: 300,
+                                  child: Text("${bikeinfo['tags']}", overflow: TextOverflow.fade,))
                             ],
                           ),
                           Row(

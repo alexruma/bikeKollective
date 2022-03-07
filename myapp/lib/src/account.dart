@@ -51,7 +51,7 @@ class _AccountPageState extends State<AccountPage> {
               itemBuilder: (context, index){
               return ListTile(
                 onTap: (){
-                  //TODO: View Bike
+                  Navigator.push(context,MaterialPageRoute(builder: (context)=> SingleBike(bikeDoc: items[index], bikeId: items[index].id, )));
                 },
                 leading: FittedBox(
                     fit: BoxFit.contain,
@@ -79,6 +79,8 @@ class _AccountPageState extends State<AccountPage> {
               Expanded(child: ListTile(
                 onTap: (){
                   //TODO: View Bike
+                  Navigator.push(context,MaterialPageRoute(builder: (context)=> SingleBike(bikeDoc: snapshot.data, bikeId: snapshot.data.id, )));
+
                 },
                 leading: FittedBox(
                     fit: BoxFit.contain,

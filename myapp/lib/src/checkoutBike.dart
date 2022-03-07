@@ -106,13 +106,16 @@ class _checkoutBikeState extends State<checkoutBike> {
   }
 
   review(context, reviewslist) {
+    reviewslist.remove("");
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 5, 20, 10),
       child: Container(
         height: 100,
         width: 275,
         decoration: BoxDecoration(border: Border.all(color: Colors.black)),
-        child: CupertinoScrollbar(
+        child:
+        reviewslist.length == 0 ? const Center(child: Text("No Reviews Available"),)  :
+        CupertinoScrollbar(
           child: ListView.builder(
               scrollDirection: Axis.vertical,
               shrinkWrap: true,
@@ -191,10 +194,10 @@ class _checkoutBikeState extends State<checkoutBike> {
                     //       "Tags: ",
                     //       style: TextStyle(fontWeight: FontWeight.bold),
                     //     ),
-                    //     Text(
-                    //       "${snapshot.data[0]['tags']}",
-                    //       overflow: TextOverflow.fade,
-                    //     )
+                    //     Flexible(
+                    //         child: Text("${snapshot.data[0]['tags']}",
+                    //           overflow: TextOverflow.fade,
+                    //         softWrap: false,))
                     //   ],
                     // ),
                     Row(
