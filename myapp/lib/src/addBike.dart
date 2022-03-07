@@ -38,24 +38,12 @@ class _AddBikeState extends State<AddBike> {
   final bikeImage = BikeImage();
   final _formKey = GlobalKey<FormState>();
   final bike = BikeFields();
+  
+  bool releaseOfInterest = false;
 
   late Widget _icon;
 
-  // Future<void> _dateSelector(BuildContext context) async {
-  //   final DateTime? picked = await showDatePicker(
-  //     context: context,
-  //     initialDate: DateTime(2022),
-  //     firstDate: DateTime(1900),lastDate: DateTime(2025),
-  //     initialDatePickerMode: DatePickerMode.year,
-  //   );
-  //   if (picked != null) {
-  //     setState(() {
-  //       bike.year = int.parse(DateFormat('yyyy').format(picked));
-  //       Navigator.pop(context);
-  //     });
-  //   }
-  // }
-
+  @override
   void initState() {
     super.initState();
     _icon = bikeImage.photo;
@@ -247,6 +235,40 @@ class _AddBikeState extends State<AddBike> {
                               ],
                             ),
                             Row(
+                              children: [
+                                const Text(
+                                  "Please acknowledge that you agree to a "
+                                ),
+                                GestureDetector(
+                                  child: const Text(
+                                    "Release of Interest",
+                                    style: TextStyle(
+                                      color: Colors.teal,
+                                      fontWeight: FontWeight.bold
+                                    )
+                                  ),
+                                  onTap: () => showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) => 
+                                      const AlertDialog(
+                                        content: Text(
+                                          "I, the user, agree that I release my bike to be used by others without my permission.",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold
+                                          )
+                                        )
+                                      )
+                                  )
+                                )
+                              ],
+                            ),
+                            Checkbox(
+                              value: releaseOfInterest,
+                              onChanged: (value) {
+                                setState(() => releaseOfInterest = value ?? false);
+                              }
+                            ),
+                            Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,
                                 children: [
@@ -270,7 +292,7 @@ class _AddBikeState extends State<AddBike> {
   }
 
   Future<void> _addBike(CollectionReference bikes) async {
-    if (_formKey.currentState!.validate()) {
+    if (_formKey.currentState!.validate() && releaseOfInterest) {
       _formKey.currentState!.save();
       bike.image = bikeImage.url;
       Position loc = await getLocation();
