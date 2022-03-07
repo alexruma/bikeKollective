@@ -1,3 +1,4 @@
+import 'package:bike_kollective/src/checkoutBike.dart';
 import 'package:firebase_image/firebase_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -66,6 +67,16 @@ class _SingleBikeState extends State<SingleBike> {
                         ),
                       ),
                     ),
+                    GestureDetector(
+                        child: Text(
+                          'Borrow This Bike',
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                        onTap: () => Navigator.of(context).push(
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    checkoutBike(bikeId: snapshot.data?.id)))),
                     fieldRow("available", data['available']),
                     fieldRow("category", data['category']),
                     fieldRow("condition", data['condition']),
