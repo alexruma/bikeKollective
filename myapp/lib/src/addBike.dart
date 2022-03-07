@@ -315,6 +315,7 @@ class _AddBikeState extends State<AddBike> {
             'reviews': [],
             'id': 1,
             'owner': FirebaseAuth.instance.currentUser?.uid
+            'numberOfReviews': 1
           })
           .then((value) => print("Bike Added"))
           .catchError((error) => print("Failed to add bike!"));

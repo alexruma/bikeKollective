@@ -60,7 +60,11 @@ class _NavBarPageState extends State<NavBarPage> {
           Center(
               child: Padding(
             padding: const EdgeInsets.all(2.0),
-            child: Text(_titleText),
+            child: Center(
+                child: Text(
+              _titleText,
+              style: const TextStyle(fontFamily: 'Righteous', fontSize: 24),
+            )),
           )),
         ]),
       ),

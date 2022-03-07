@@ -113,17 +113,19 @@ class _checkoutBikeState extends State<checkoutBike> {
         height: 100,
         width: 275,
         decoration: BoxDecoration(border: Border.all(color: Colors.black)),
-        child:
-        reviewslist.length == 0 ? const Center(child: Text("No Reviews Available"),)  :
-        CupertinoScrollbar(
-          child: ListView.builder(
-              scrollDirection: Axis.vertical,
-              shrinkWrap: true,
-              itemCount: reviewslist.length,
-              itemBuilder: (context, index) {
-                return Text("${index + 1}. ${reviewslist[index]}");
-              }),
-        ),
+        child: reviewslist.length == 0
+            ? const Center(
+                child: Text("No Reviews Available"),
+              )
+            : CupertinoScrollbar(
+                child: ListView.builder(
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    itemCount: reviewslist.length,
+                    itemBuilder: (context, index) {
+                      return Text("${index + 1}. ${reviewslist[index]}");
+                    }),
+              ),
       ),
     );
   }
@@ -203,9 +205,13 @@ class _checkoutBikeState extends State<checkoutBike> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: const [
-                        Text(
-                          "Bike Reviews",
-                          style: TextStyle(fontSize: 18),
+                        Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Text(
+                            "Bike Reviews",
+                            style: TextStyle(
+                                fontSize: 29, fontFamily: 'Righteous'),
+                          ),
                         )
                       ],
                     ),
@@ -216,13 +222,21 @@ class _checkoutBikeState extends State<checkoutBike> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         ElevatedButton(
-                          child: const Text("Checkout Bike"),
+                          child: const Text(
+                            "Checkout Bike",
+                            style: TextStyle(
+                                fontFamily: 'Righteous', fontSize: 22),
+                          ),
                           onPressed: () {
                             checkout();
                           },
                         ),
                         ElevatedButton(
-                          child: const Text("Report Stolen"),
+                          child: const Text(
+                            "Report Stolen",
+                            style: TextStyle(
+                                fontFamily: 'Righteous', fontSize: 22),
+                          ),
                           style: ButtonStyle(
                               backgroundColor:
                                   MaterialStateProperty.all<Color>(Colors.red)),

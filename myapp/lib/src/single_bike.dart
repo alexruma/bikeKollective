@@ -17,20 +17,14 @@ class SingleBike extends StatefulWidget {
 }
 
 class _SingleBikeState extends State<SingleBike> {
+  // Form key used for add tag form.
   final formKey = GlobalKey<FormState>();
   // Ensures user does not rate bike multiple times.
   bool rated = false;
 
-  void initState() {
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('View Bike'),
-      ),
       body: FutureBuilder<DocumentSnapshot>(
           future: FirebaseFirestore.instance
               .collection('bikes')
@@ -38,31 +32,41 @@ class _SingleBikeState extends State<SingleBike> {
               .get(),
           builder:
               (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+            // Error generating snapshot.
             if (snapshot.hasError) {
               return const Text("Something went wrong");
             }
-            if(!snapshot.hasData){
-              return const Center(child: CircularProgressIndicator());
-            }
-
+            // Would load if document had no data.
             if (snapshot.hasData && !snapshot.data!.exists) {
               return const Text("Document does not exist");
-            } else {
+            }
+            // Expected normal result. Displays bike data.
+            if (snapshot.hasData) {
               Map<String, dynamic> data =
                   snapshot.data?.data() as Map<String, dynamic>;
               return SingleChildScrollView(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(40), // Image border
-                      child: SizedBox.fromSize(
-                          size: const Size.fromRadius(118), // Image radius
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 19.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(40), // Image border
+                        child: SizedBox.fromSize(
+                            size: const Size.fromRadius(148), // Image radius
 
-                          child: getImage(data['image'])),
-                    ),
-                    GestureDetector(
+                            child: getImage(data['image'])),
+                      ),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            primary: Colors.white,
+                            shadowColor: Colors.blue,
+                            elevation: 4.0),
+                        onPressed: () => Navigator.of(context).push(
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    checkoutBike(bikeId: snapshot.data?.id))),
                         child: const Text(
                           'Borrow This Bike!',
                           style: TextStyle(
@@ -71,67 +75,66 @@ class _SingleBikeState extends State<SingleBike> {
                               fontFamily: 'Bangers',
                               color: Colors.deepPurpleAccent),
                         ),
-                        onTap: () => Navigator.of(context).push(
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    checkoutBike(bikeId: snapshot.data?.id)))),
-                    fieldRow("available", data['available']),
-                    fieldRow("category", data['category']),
-                    fieldRow("condition", data['condition']),
-                    fieldRow("make", data['make']),
-                    fieldRow("model", data['model']),
-                    fieldRow("year", data['year']),
-                    fieldRow("user rating", data['rating']),
-                    const Text("Your Rating: "),
-                    RatingBar.builder(
-                      initialRating: 3,
-                      minRating: 1,
-                      direction: Axis.horizontal,
-                      allowHalfRating: true,
-                      itemCount: 5,
-                      itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
-                      itemBuilder: (context, _) => const Icon(
-                        Icons.star,
-                        color: Colors.deepPurpleAccent,
                       ),
-                      onRatingUpdate: (rating) {
-                        if (rated == false) {
-                          BikeUpdate ratingUpdate =
-                              BikeUpdate(bikeDocId: snapshot.data?.id);
-                          ratingUpdate.updateBikeRating(
-                              rating, data['rating'], data['numberOfRatings']);
-                          setState(() {
-                            rated = true;
-                          });
-                        } else {
-                          showRatingDialog();
-                        }
-                      },
-                    ),
-                    Padding(
-                        padding: const EdgeInsets.all(12.0),
-                        child: allTagsDisplay(data['tags'])),
-                    Form(
-                        key: formKey,
-                        child: SetUpHelper.tagFormField(
-                            "Add Tag", snapshot.data?.id, data['tags'])),
-                    ElevatedButton(
-                        onPressed: addTagPress, child: const Text("Add")),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
+                      fieldRow("available", data['available']),
+                      fieldRow("category", data['category']),
+                      fieldRow("condition", data['condition']),
+                      fieldRow("make", data['make']),
+                      fieldRow("model", data['model']),
+                      fieldRow("year", data['year']),
+                      fieldRow("user rating", data['rating']),
+                      const Text("Your Rating: "),
+                      RatingBar.builder(
+                        initialRating: 3,
+                        minRating: 1,
+                        direction: Axis.horizontal,
+                        allowHalfRating: true,
+                        itemCount: 5,
+                        itemPadding:
+                            const EdgeInsets.symmetric(horizontal: 4.0),
+                        itemBuilder: (context, _) => const Icon(
+                          Icons.star,
+                          color: Colors.deepPurpleAccent,
+                        ),
+                        onRatingUpdate: (rating) {
+                          if (rated == false) {
+                            BikeUpdate ratingUpdate =
+                                BikeUpdate(bikeDocId: snapshot.data?.id);
+                            ratingUpdate.updateBikeRating(rating,
+                                data['rating'], data['numberOfRatings']);
+                            setState(() {
+                              rated = true;
+                            });
+                          } else {
+                            showRatingDialog();
+                          }
+                        },
+                      ),
+                      Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: allTagsDisplay(data['tags'])),
+                      Form(
+                          key: formKey,
+                          child: SetUpHelper.tagFormField(
+                              "Add Tag", snapshot.data?.id, data['tags'])),
+                      ElevatedButton(
+                          onPressed: addTagPress, child: const Text("Add")),
+                      Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [],
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: ElevatedButton(
-                          onPressed: popRoute, child: const Text("Go Back")),
-                    ),
-                  ],
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ElevatedButton(
+                            onPressed: popRoute, child: const Text("Go Back")),
+                      ),
+                    ],
+                  ),
                 ),
               );
+              // else, should only display while app is still waiting on intiial data from Firestore.
+            } else {
+              return const Text("Loading");
             }
           }),
     );
@@ -165,6 +168,7 @@ class _SingleBikeState extends State<SingleBike> {
               style: const TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
+                fontFamily: 'Righteous',
               )),
           // Field data row.
           Text(dataItem.toString(),
@@ -220,7 +224,6 @@ class _SingleBikeState extends State<SingleBike> {
             child: Text(
               tag,
               style: const TextStyle(
-                overflow: TextOverflow.fade,
                 color: Colors.white,
                 fontSize: 15.0,
               ),
@@ -239,14 +242,21 @@ class _SingleBikeState extends State<SingleBike> {
     for (int i = 0; i < tagList.length; i++) {
       rowChildren.add(singleTagDisplay(tagList[i]));
       if ((i + 1) % 3 == 0) {
-        columnChildren.add(Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: rowChildren));
+        columnChildren.add(
+          Wrap(
+            children: rowChildren,
+            alignment: WrapAlignment.center,
+          ),
+        );
         rowChildren = [];
       }
     }
-    columnChildren.add(Row(
-        mainAxisAlignment: MainAxisAlignment.center, children: rowChildren));
+    columnChildren.add(
+      Wrap(
+        children: rowChildren,
+        alignment: WrapAlignment.center,
+      ),
+    );
     return Column(
         mainAxisAlignment: MainAxisAlignment.center, children: columnChildren);
   }

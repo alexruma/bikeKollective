@@ -119,15 +119,18 @@ flutter:
     - family:  Pacifico
       fonts:
         - asset: assets/google_fonts/Pacifico-Regular.ttf
-    - family:  Bangers
+    - family:  Righteous
       fonts:
-        - asset: assets/google_fonts/Bangers-Regular.ttf
+        - asset: assets/google_fonts/Righteous-Regular.ttf
     - family:  Libre Franklin
       fonts:
         - asset: assets/google_fonts/static/LibreFranklin-Black.ttf
     - family: Zen Kurenaido
       fonts:
         - asset: assets/google_fonts/ZenKurenaido-Regular.ttf
+    - family: Righteous
+      fonts:
+        - asset: assets/google_fonts/Righteous-Regular.ttf
   
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
