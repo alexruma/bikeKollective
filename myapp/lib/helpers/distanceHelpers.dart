@@ -1,4 +1,6 @@
 import 'package:flutter/cupertino.dart';
+import 'package:location/location.dart';
+import 'package:latlong2/latlong.dart' as lt;
 
 String distanceConv(meters) {
   if (meters < 1000) {
@@ -21,4 +23,15 @@ Widget bikeFromUser(bikeid,bikeDistance ) {
       Text(distanceConv(bikeDistance[bikeid])),
     ],
   );
+}
+
+bikeWithinDistance(bike)async{
+  LocationData location = await Location().getLocation();
+  var curr_distance = lt.Distance().as(lt.LengthUnit.Meter,
+      lt.LatLng(location.latitude??50.0, location.longitude??50.0),
+      lt.LatLng(bike['location'].latitude,bike['location'].longitude));
+  if (curr_distance > 10){
+    return false;
+  }
+  return true;
 }

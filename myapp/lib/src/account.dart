@@ -45,7 +45,7 @@ class _AccountPageState extends State<AccountPage> {
             return const Center(child: CircularProgressIndicator());
           }
           var items = snapshot.data?.docs;
-          // print(items!.id);
+          
           if (items.length == 0) {
             return const Center(child: Text("No Bikes Currently owned"));
           }
@@ -89,7 +89,6 @@ class _AccountPageState extends State<AccountPage> {
                 Expanded(
                     child: ListTile(
                   onTap: () {
-                    //TODO: View Bike
                     Navigator.push(
                         context,
                         MaterialPageRoute(
