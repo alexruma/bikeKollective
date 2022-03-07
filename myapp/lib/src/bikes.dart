@@ -50,7 +50,7 @@ class _BikeListState extends State<BikeList> {
         elevation: 0.0,
         backgroundColor: Colors.white,
         bottom: PreferredSize(
-          preferredSize: Size.fromHeight(0.0),
+          preferredSize: const Size.fromHeight(0.0),
           child: Container(
               //  padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
@@ -64,10 +64,10 @@ class _BikeListState extends State<BikeList> {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      Icon(Icons.search, color: Colors.grey),
+                      const Icon(Icons.search, color: Colors.grey),
                       Expanded(
                         child: TextField(
-                          decoration: InputDecoration.collapsed(
+                          decoration: const InputDecoration.collapsed(
                             hintText: 'Search',
                           ),
                           onChanged: (value) {
@@ -88,7 +88,7 @@ class _BikeListState extends State<BikeList> {
           builder:
               (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (!snapshot.hasData) {
-              return Center(
+              return const Center(
                 child: CircularProgressIndicator(),
               ); // Center
             }

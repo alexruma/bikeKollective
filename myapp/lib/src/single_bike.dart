@@ -1,3 +1,4 @@
+import 'package:bike_kollective/helpers/distanceHelpers.dart';
 import 'package:bike_kollective/src/checkoutBike.dart';
 import 'package:firebase_image/firebase_image.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +26,8 @@ class _SingleBikeState extends State<SingleBike> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: const Text("View Bike", style:
+      TextStyle(fontFamily: 'Righteous', fontSize: 24),),),
       body: FutureBuilder<DocumentSnapshot>(
           future: FirebaseFirestore.instance
               .collection('bikes')
@@ -58,23 +61,34 @@ class _SingleBikeState extends State<SingleBike> {
 
                             child: getImage(data['image'])),
                       ),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                            primary: Colors.white,
-                            shadowColor: Colors.blue,
-                            elevation: 4.0),
-                        onPressed: () => Navigator.of(context).push(
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    checkoutBike(bikeId: snapshot.data?.id))),
-                        child: const Text(
-                          'Borrow This Bike!',
-                          style: TextStyle(
-                              fontSize: 26,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'Bangers',
-                              color: Colors.deepPurpleAccent),
-                        ),
+                      FutureBuilder(
+                          future: bikeWithinDistance(data),
+                          builder: (context, snapshot){
+                            if (!snapshot.hasData){
+                              return const Text("");
+                            }
+                            if(snapshot.data == false){
+                              return const Text("");
+                            }
+                            return ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  primary: Colors.white,
+                                  shadowColor: Colors.blue,
+                                  elevation: 4.0),
+                              onPressed: () => Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          checkoutBike(bikeId: widget.bikeId))),
+                              child: const Text(
+                                'Borrow This Bike!',
+                                style: TextStyle(
+                                    fontSize: 26,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: 'Bangers',
+                                    color: Colors.deepPurpleAccent),
+                              ),
+                            );
+                          }
                       ),
                       fieldRow("available", data['available']),
                       fieldRow("category", data['category']),
