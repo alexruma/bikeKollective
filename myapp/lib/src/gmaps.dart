@@ -17,6 +17,7 @@ import 'package:latlong2/latlong.dart' as lt;
 import '../helpers/RatingStar.dart';
 import '../helpers/distanceHelpers.dart';
 import '../models/cardImage.dart';
+import 'package:bike_kollective/src_exports.dart';
 
 class Gmaps extends StatefulWidget {
   const Gmaps({Key? key}) : super(key: key);
@@ -356,9 +357,15 @@ class _GmapsState extends State<Gmaps> {
                                           children: [
                                             ElevatedButton(
                                               style: const ButtonStyle(),
-                                              onPressed: () {
-                                                Navigator.push(context,MaterialPageRoute(builder: (context)=> SingleBike(bikeDoc: items[index], bikeId: items[index].id, )));
-                                              },
+                                              onPressed: () =>
+                                                  Navigator.of(context).push(
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              SingleBike(
+                                                                bikeId:
+                                                                    items[index]
+                                                                        .id,
+                                                              ))),
                                               child: const Text(
                                                 'View Bike',
                                                 style: TextStyle(

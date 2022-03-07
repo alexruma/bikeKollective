@@ -8,9 +8,8 @@ import 'package:bike_kollective/src_exports.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class SingleBike extends StatefulWidget {
-  SingleBike({Key? key, required this.bikeDoc, this.bikeId}) : super(key: key);
+  SingleBike({Key? key, this.bikeId}) : super(key: key);
 
-  var bikeDoc;
   var bikeId;
 
   @override
@@ -19,14 +18,11 @@ class SingleBike extends StatefulWidget {
 
 class _SingleBikeState extends State<SingleBike> {
   final formKey = GlobalKey<FormState>();
-  var bikeData;
   // Ensures user does not rate bike multiple times.
   bool rated = false;
 
   void initState() {
     super.initState();
-    bikeData = widget.bikeDoc.data();
-    print(bikeData['category']);
   }
 
   @override
@@ -62,16 +58,9 @@ class _SingleBikeState extends State<SingleBike> {
                     ClipRRect(
                       borderRadius: BorderRadius.circular(40), // Image border
                       child: SizedBox.fromSize(
-                        size: const Size.fromRadius(118), // Image radius
+                          size: const Size.fromRadius(118), // Image radius
 
-                        child: Image(
-                          image: FirebaseImage(
-                            data['image'] ?? data['image'],
-                          ),
-                          width: 200,
-                          height: 200,
-                        ),
-                      ),
+                          child: getImage(data['image'])),
                     ),
                     GestureDetector(
                         child: const Text(
@@ -262,6 +251,7 @@ class _SingleBikeState extends State<SingleBike> {
         mainAxisAlignment: MainAxisAlignment.center, children: columnChildren);
   }
 
+  // Show dialog if user tries to rate bike multiple times.
   void showRatingDialog() {
     showDialog(
         context: context,
@@ -270,11 +260,30 @@ class _SingleBikeState extends State<SingleBike> {
                 style: TextStyle(fontWeight: FontWeight.bold))));
   }
 
+  // Run when add tag button is pressed.
   void addTagPress() {
-    print("Adding");
     if (formKey.currentState!.validate()) {
       // If all forms validated and waiver checked, save state.
       formKey.currentState!.save();
+    }
+  }
+
+  // Return Firebase image if exists in database, otherwise display placeholder.
+  Widget getImage(bikeImage) {
+    if (bikeImage == "") {
+      return const Image(
+        image: AssetImage('assets/images/bike-icon.png'),
+        width: 200,
+        height: 200,
+      );
+    } else {
+      return Image(
+        image: FirebaseImage(
+          bikeImage,
+        ),
+        width: 200,
+        height: 200,
+      );
     }
   }
 }
