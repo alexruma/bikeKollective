@@ -15,11 +15,13 @@ class BikeUpdate {
 
   Future updateBikeRating(newRating, oldRating, numberOfRatings) async {
     numberOfRatings += 1;
-    var newAvgRating = (newRating + oldRating) / numberOfRatings;
+    var newAvgRating =
+        ((newRating * (numberOfRatings - 1)) + oldRating) / numberOfRatings;
 
-    return await userCollection
-        .doc(bikeDocId)
-        .update({"rating": newAvgRating, "numberOfRatings": numberOfRatings});
+    return await userCollection.doc(bikeDocId).update({
+      "rating": newAvgRating.roundToDouble(),
+      "numberOfRatings": numberOfRatings
+    });
   }
 
   Future updateBikeTags(newTag, oldTags) async {

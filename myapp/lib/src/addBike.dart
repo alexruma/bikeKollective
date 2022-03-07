@@ -19,7 +19,7 @@ class BikeFields {
   String lock = '';
   int year = 2022;
   String image = '';
-  int rating = 1;
+  double rating = 1;
 
   @override
   String toString() {
