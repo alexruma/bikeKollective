@@ -19,7 +19,7 @@ class BikeFields {
   String lock = '';
   int year = 2022;
   String image = '';
-  double rating = 1;
+  var rating = 1.0;
 
   @override
   String toString() {
@@ -38,7 +38,7 @@ class _AddBikeState extends State<AddBike> {
   final bikeImage = BikeImage();
   final _formKey = GlobalKey<FormState>();
   final bike = BikeFields();
-  
+
   bool releaseOfInterest = false;
 
   late Widget _icon;
@@ -182,7 +182,7 @@ class _AddBikeState extends State<AddBike> {
                                   }
                                 },
                                 onSaved: (value) {
-                                  bike.rating = value;
+                                  bike.rating = value.toDouble();
                                 }),
                             const SizedBox(height: 10),
                             TextFormField(
@@ -237,37 +237,29 @@ class _AddBikeState extends State<AddBike> {
                             Row(
                               children: [
                                 const Text(
-                                  "Please acknowledge that you agree to a "
-                                ),
+                                    "Please acknowledge that you agree to a "),
                                 GestureDetector(
-                                  child: const Text(
-                                    "Release of Interest",
-                                    style: TextStyle(
-                                      color: Colors.teal,
-                                      fontWeight: FontWeight.bold
-                                    )
-                                  ),
-                                  onTap: () => showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) => 
-                                      const AlertDialog(
-                                        content: Text(
-                                          "I, the user, agree that I release my bike to be used by others without my permission.",
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold
-                                          )
-                                        )
-                                      )
-                                  )
-                                )
+                                    child: const Text("Release of Interest",
+                                        style: TextStyle(
+                                            color: Colors.teal,
+                                            fontWeight: FontWeight.bold)),
+                                    onTap: () => showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) =>
+                                            const AlertDialog(
+                                                content: Text(
+                                                    "I, the user, agree that I release my bike to be used by others without my permission.",
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold)))))
                               ],
                             ),
                             Checkbox(
-                              value: releaseOfInterest,
-                              onChanged: (value) {
-                                setState(() => releaseOfInterest = value ?? false);
-                              }
-                            ),
+                                value: releaseOfInterest,
+                                onChanged: (value) {
+                                  setState(
+                                      () => releaseOfInterest = value ?? false);
+                                }),
                             Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,
@@ -314,8 +306,8 @@ class _AddBikeState extends State<AddBike> {
             'tags': [],
             'reviews': [],
             'id': 1,
-            'owner': FirebaseAuth.instance.currentUser?.uid
-            'numberOfReviews': 1
+            'owner': FirebaseAuth.instance.currentUser?.uid,
+            'numberOfRatings': 1
           })
           .then((value) => print("Bike Added"))
           .catchError((error) => print("Failed to add bike!"));

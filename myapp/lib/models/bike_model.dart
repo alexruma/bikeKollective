@@ -44,10 +44,10 @@ class Bikes {
   final GeoPoint location;
   final String lock;
   final String model;
-  final int rating;
+  double rating;
   final bool stolen;
   final int year;
-  int numberOfReviews;
+  int numberOfRatings;
 
   Bikes(
       {required this.available,
@@ -61,7 +61,7 @@ class Bikes {
       required this.rating,
       required this.stolen,
       required this.year,
-      required this.numberOfReviews});
+      required this.numberOfRatings});
 
   factory Bikes.fromFS(Map<String, dynamic> data) {
     return Bikes(
@@ -76,7 +76,7 @@ class Bikes {
         rating: data['rating'],
         stolen: data['stolen'],
         year: data['year'],
-        numberOfReviews: data['numberOfReviews']);
+        numberOfRatings: data['numberOfRatings']);
   }
 
   //Need to fill in
