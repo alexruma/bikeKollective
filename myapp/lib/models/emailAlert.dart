@@ -4,7 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterfire_ui/auth.dart';
 
-emailAlert(context){
+emailAlert(context) async {
+  await FirebaseAuth.instance.currentUser?.sendEmailVerification();
   return showDialog(context: context,
       barrierDismissible: false,
       builder: (BuildContext context){
