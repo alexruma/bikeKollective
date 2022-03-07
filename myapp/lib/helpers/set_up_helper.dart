@@ -57,7 +57,7 @@ class SetUpHelper {
     return Padding(
       padding: const EdgeInsets.all(3.0),
       child: TextFormField(
-          autofocus: true,
+          autofocus: false,
           decoration: InputDecoration(
             labelText: label,
             border: const UnderlineInputBorder(
