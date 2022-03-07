@@ -1,0 +1,259 @@
+import 'package:firebase_image/firebase_image.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:bike_kollective/src_exports.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+
+class SingleBike extends StatefulWidget {
+  SingleBike({Key? key, required this.bikeDoc, this.bikeId}) : super(key: key);
+
+  var bikeDoc;
+  var bikeId;
+
+  @override
+  State<SingleBike> createState() => _SingleBikeState();
+}
+
+class _SingleBikeState extends State<SingleBike> {
+  final formKey = GlobalKey<FormState>();
+  var bikeData;
+  // Ensures user does not rate bike multiple times.
+  bool rated = false;
+
+  void initState() {
+    super.initState();
+    bikeData = widget.bikeDoc.data();
+    print(bikeData['category']);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: FutureBuilder<DocumentSnapshot>(
+          future: FirebaseFirestore.instance
+              .collection('bikes')
+              .doc(widget.bikeId)
+              .get(),
+          builder:
+              (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+            if (snapshot.hasError) {
+              return const Text("Something went wrong");
+            }
+
+            if (snapshot.hasData && !snapshot.data!.exists) {
+              return const Text("Document does not exist");
+            } else {
+              Map<String, dynamic> data =
+                  snapshot.data?.data() as Map<String, dynamic>;
+              return SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(40), // Image border
+                      child: SizedBox.fromSize(
+                        size: const Size.fromRadius(118), // Image radius
+
+                        child: Image(
+                          image: FirebaseImage(
+                            data['image'],
+                          ),
+                          width: 200,
+                          height: 200,
+                        ),
+                      ),
+                    ),
+                    fieldRow("available", data['available']),
+                    fieldRow("category", data['category']),
+                    fieldRow("condition", data['condition']),
+                    fieldRow("make", data['make']),
+                    fieldRow("make", data['make']),
+                    fieldRow("year", data['year']),
+                    fieldRow("user rating", data['rating']),
+                    const Text("Your Rating: "),
+                    RatingBar.builder(
+                      initialRating: 3,
+                      minRating: 1,
+                      direction: Axis.horizontal,
+                      allowHalfRating: true,
+                      itemCount: 5,
+                      itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
+                      itemBuilder: (context, _) => const Icon(
+                        Icons.star,
+                        color: Colors.deepPurpleAccent,
+                      ),
+                      onRatingUpdate: (rating) {
+                        if (rated == false) {
+                          BikeUpdate ratingUpdate =
+                              BikeUpdate(bikeDocId: snapshot.data?.id);
+                          ratingUpdate.updateBikeRating(
+                              rating, data['rating'], data['numberOfRatings']);
+                          setState(() {
+                            rated = true;
+                          });
+                        } else {
+                          showRatingDialog();
+                        }
+                      },
+                    ),
+                    Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: allTagsDisplay(data['tags'])),
+                    Form(
+                        key: formKey,
+                        child: SetUpHelper.tagFormField(
+                            "Add Tag", snapshot.data?.id, data['tags'])),
+                    ElevatedButton(
+                        onPressed: addTagPress, child: const Text("Add")),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ElevatedButton(
+                          onPressed: popRoute, child: const Text("Go Back")),
+                    ),
+                  ],
+                ),
+              );
+            }
+          }),
+    );
+  }
+
+  // Function to return back to bike list page.
+  void popRoute() {
+    Navigator.of(context).pop();
+  }
+
+  // Returns Row populated with formatted and stylized piece of data from bike document.
+  Widget fieldRow(String fieldName, dataItem) {
+    if (dataItem == null) {
+      return Padding(
+        padding: const EdgeInsets.only(top: 8),
+        child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+          Text('$fieldName: ',
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.deepPurpleAccent,
+              )),
+          const Text('N/A'),
+        ]),
+      );
+    } else {
+      return Padding(
+        padding: const EdgeInsets.only(top: 8),
+        child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+          // Field name row.
+          Text('$fieldName: ',
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              )),
+          // Field data row.
+          Text(dataItem.toString(),
+              style: const TextStyle(
+                  fontWeight: FontWeight.bold, color: Colors.blue)),
+        ]),
+      );
+    }
+  }
+
+  Widget bigRow(String fieldName, dataItem) {
+    if (dataItem == null) {
+      return Padding(
+        padding: const EdgeInsets.only(),
+        child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+          Text('$fieldName: ',
+              style:
+                  const TextStyle(fontWeight: FontWeight.bold, fontSize: 24)),
+          const Text('N/A'),
+        ]),
+      );
+    } else {
+      return Padding(
+        padding: const EdgeInsets.only(bottom: 22),
+        child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+          Text('$fieldName: ',
+              style:
+                  const TextStyle(fontWeight: FontWeight.bold, fontSize: 24)),
+          Text(dataItem.toString()),
+        ]),
+      );
+    }
+  }
+
+  // Display a single tag from the bike's tag array.
+  Widget singleTagDisplay(tag) {
+    return Stack(
+      children: [
+        Container(
+          padding: const EdgeInsets.symmetric(
+            vertical: 5.0,
+            horizontal: 5.0,
+          ),
+          child: Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 10.0,
+              vertical: 8.0,
+            ),
+            decoration: BoxDecoration(
+              color: Colors.deepPurpleAccent,
+              borderRadius: BorderRadius.circular(5),
+            ),
+            child: Text(
+              tag,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 15.0,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  // Display all of bike's tags in a Column containing Rows consisting of 3 tagDisplays
+  allTagsDisplay(tagList) {
+    List<Widget> columnChildren = [];
+    List<Widget> rowChildren = [];
+
+    for (int i = 0; i < tagList.length; i++) {
+      rowChildren.add(singleTagDisplay(tagList[i]));
+      if ((i + 1) % 3 == 0) {
+        columnChildren.add(Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: rowChildren));
+        rowChildren = [];
+      }
+    }
+    columnChildren.add(Row(
+        mainAxisAlignment: MainAxisAlignment.center, children: rowChildren));
+    return Column(
+        mainAxisAlignment: MainAxisAlignment.center, children: columnChildren);
+  }
+
+  void showRatingDialog() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) => const AlertDialog(
+            content: Text("You've already rated this bike.",
+                style: TextStyle(fontWeight: FontWeight.bold))));
+  }
+
+  void addTagPress() {
+    print("Adding");
+    if (formKey.currentState!.validate()) {
+      // If all forms validated and waiver checked, save state.
+      formKey.currentState!.save();
+    }
+  }
+}
