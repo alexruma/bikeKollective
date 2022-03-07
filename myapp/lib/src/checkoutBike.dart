@@ -197,15 +197,15 @@ class _checkoutBikeState extends State<checkoutBike> {
                     //     )
                     //   ],
                     // ),
-                    // Row(
-                    //   mainAxisAlignment: MainAxisAlignment.center,
-                    //   children: const [
-                    //     Text(
-                    //       "Bike Reviews",
-                    //       style: TextStyle(fontSize: 18),
-                    //     )
-                    //   ],
-                    // ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        Text(
+                          "Bike Reviews",
+                          style: TextStyle(fontSize: 18),
+                        )
+                      ],
+                    ),
                     Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                       review(context, snapshot.data[0]['reviews'])
                     ]),

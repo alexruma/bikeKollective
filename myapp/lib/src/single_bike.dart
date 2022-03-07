@@ -60,7 +60,7 @@ class _SingleBikeState extends State<SingleBike> {
 
                         child: Image(
                           image: FirebaseImage(
-                            data['image'],
+                            data['image'] ?? data['image'],
                           ),
                           width: 200,
                           height: 200,
@@ -68,10 +68,13 @@ class _SingleBikeState extends State<SingleBike> {
                       ),
                     ),
                     GestureDetector(
-                        child: Text(
-                          'Borrow This Bike',
+                        child: const Text(
+                          'Borrow This Bike!',
                           style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
+                              fontSize: 26,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Bangers',
+                              color: Colors.deepPurpleAccent),
                         ),
                         onTap: () => Navigator.of(context).push(
                             MaterialPageRoute(
@@ -81,7 +84,7 @@ class _SingleBikeState extends State<SingleBike> {
                     fieldRow("category", data['category']),
                     fieldRow("condition", data['condition']),
                     fieldRow("make", data['make']),
-                    fieldRow("make", data['make']),
+                    fieldRow("model", data['model']),
                     fieldRow("year", data['year']),
                     fieldRow("user rating", data['rating']),
                     const Text("Your Rating: "),
