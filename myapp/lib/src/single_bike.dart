@@ -28,6 +28,9 @@ class _SingleBikeState extends State<SingleBike> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('View Bike'),
+      ),
       body: FutureBuilder<DocumentSnapshot>(
           future: FirebaseFirestore.instance
               .collection('bikes')
@@ -37,6 +40,9 @@ class _SingleBikeState extends State<SingleBike> {
               (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
             if (snapshot.hasError) {
               return const Text("Something went wrong");
+            }
+            if(!snapshot.hasData){
+              return const Center(child: CircularProgressIndicator());
             }
 
             if (snapshot.hasData && !snapshot.data!.exists) {
@@ -214,6 +220,7 @@ class _SingleBikeState extends State<SingleBike> {
             child: Text(
               tag,
               style: const TextStyle(
+                overflow: TextOverflow.fade,
                 color: Colors.white,
                 fontSize: 15.0,
               ),

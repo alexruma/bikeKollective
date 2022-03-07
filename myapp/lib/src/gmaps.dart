@@ -4,6 +4,7 @@ import 'package:bike_kollective/models/bannedAlert.dart';
 import 'package:bike_kollective/models/emailAlert.dart';
 import 'package:bike_kollective/src/checkoutBike.dart';
 import 'package:bike_kollective/src/returnBike.dart';
+import 'package:bike_kollective/src/single_bike.dart';
 import 'package:bike_kollective/src/stolenBike.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -339,9 +340,12 @@ class _GmapsState extends State<Gmaps> {
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold),
                                           ),
-                                          Text(
-                                            "${items[index]['tags']}",
-                                            overflow: TextOverflow.fade,
+                                          Expanded(
+                                            child: Text(
+                                              "${items[index]['tags']}",
+                                              overflow: TextOverflow.clip,
+                                              softWrap: false,
+                                            ),
                                           )
                                         ],
                                       ),
@@ -374,14 +378,8 @@ class _GmapsState extends State<Gmaps> {
                                                 false)
                                               ElevatedButton(
                                                 onPressed: () {
-                                                  Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              checkoutBike(
-                                                                  bikeId: items[
-                                                                          index]
-                                                                      .id)));
+                                                  Navigator.push(context, MaterialPageRoute(builder: (context) =>
+                                                              checkoutBike(bikeId: items[index].id)));
                                                 },
                                                 child: const Text(
                                                   'Checkout Bike',
@@ -426,13 +424,13 @@ class _GmapsState extends State<Gmaps> {
         if (snapshot.hasData && snapshot.data!.exists) {
           final userdata = snapshot.requireData;
 
-          // if (FirebaseAuth.instance.currentUser?.emailVerified == false &&
-          //     FirebaseAuth.instance.currentUser?.uid !=
-          //         'D3lVDIPhhZNoQJb24o1GtQ1HXCx2') {
-          //   WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
-          //     emailAlert(context);
-          //   });
-          // }
+          if (FirebaseAuth.instance.currentUser?.emailVerified == false &&
+              FirebaseAuth.instance.currentUser?.uid !=
+                  'D3lVDIPhhZNoQJb24o1GtQ1HXCx2') {
+            WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+              emailAlert(context);
+            });
+          }
 
           if (userdata['banned'] == true) {
             // If the user is banned show a dialog
@@ -549,10 +547,9 @@ class _GmapsState extends State<Gmaps> {
                                 "Tags: ",
                                 style: TextStyle(fontWeight: FontWeight.bold),
                               ),
-                              Text(
-                                "${bikeinfo['tags']}",
-                                overflow: TextOverflow.fade,
-                              )
+                              SizedBox(
+                                width: 300,
+                                  child: Text("${bikeinfo['tags']}", overflow: TextOverflow.fade,))
                             ],
                           ),
                           Row(
