@@ -20,10 +20,7 @@ bikeTimeAlert(context){
             TextButton(child: const Text("Exit"),
               onPressed: (){
               Navigator.of(context).pop();
-                // SignedOutAction((context) {
-                //   Navigator.of(context).pushReplacementNamed('/sign-in');});
-                // FirebaseAuth.instance.signOut();
-                // Navigator.of(context).pushNamedAndRemoveUntil('/sign-in', (route) => false);
+
               },)
           ],
         );
@@ -32,7 +29,7 @@ bikeTimeAlert(context){
 
 overtime(bikeTime){
   DateTime bikeCheckoutTime = bikeTime.toDate();
-  bikeCheckoutTime= bikeCheckoutTime.add(const Duration(hours: 6));
+  bikeCheckoutTime= bikeCheckoutTime.add(const Duration(hours: 8));
   if(bikeCheckoutTime.isBefore(DateTime.now())){
     return true;
   }
@@ -45,5 +42,5 @@ class alertTime{
 }
 
 //Current Settings
-// Cloud FUnction - Function run every 30 min. 8 hr limit
-// App 6 hr limit. Alert every 20 minutes after 6 hrs.
+// Cloud FUnction - Banned Function run every 10 min. 24 hr limit
+// App 24 hr limit. Alert every 20 minutes after 8 hrs.

@@ -9,8 +9,8 @@ Widget cardImage(image){
       ,);
   } else{
     return Image(image: FirebaseImage(image),
-      width: 300,
-      height: 200
-      ,);
+      width: 200,
+      height: 100,
+      );
   }
 }

@@ -16,7 +16,7 @@ snapshot.forEach(async doc=> {
     // Get checkout Time and if greater than
     curr_doc = doc.data();
     curr_time = curr_doc['checkoutTime'].toMillis() ;
-    time_con = 28800000 // Time constraint in milliseconds 8 hrs
+    time_con = 86400000 // Time constraint in milliseconds 8 hrs
 
     if(curr_time + time_con < Date.now()){
         console.log('Found late time. Bike ID:' + doc.id)
