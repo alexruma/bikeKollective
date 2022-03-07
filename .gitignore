@@ -103,3 +103,4 @@ node_modules/
 
 myapp/lib/generated_plugin_registrant.dart
 *.flutter-plugins
+myapp/assets/keys/google_client_id.txt

@@ -6,18 +6,25 @@ import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:flutterfire_ui/auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/services.dart';
+
+const CLIENT_ID_PATH = 'assets/keys/google_client_id.txt';
 
 void main() async {
   // Setting need to start firebase
   WidgetsFlutterBinding.ensureInitialized();
+  String clientID = await rootBundle.loadString(CLIENT_ID_PATH);
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const MyApp());
+  runApp(MyApp(clientID: clientID));
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({Key? key}) : super(key: key);
+
+  final String clientID = '';
+
+  const MyApp({Key? key, required clientID}) : super(key: key);
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -28,13 +35,13 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    const List<ProviderConfiguration> providerConfigs = [
+    List<ProviderConfiguration> providerConfigs = [
       EmailProviderConfiguration(),
-      GoogleProviderConfiguration(clientId: '')
+      GoogleProviderConfiguration(clientId: widget.clientID)
     ];
     return MaterialApp(
       routes: {
-        '/sign-in': (context) => const SignIn(providerConfigs: providerConfigs),
+        '/sign-in': (context) => SignIn(providerConfigs: providerConfigs),
         '/home': (context) => const NavBarPage(),
         '/forgot-password': (context) => const BKForgotPassword(),
         '/profile': (context) =>

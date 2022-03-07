@@ -4,7 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterfire_ui/auth.dart';
 
-emailAlert(context){
+emailAlert(context) async {
+  await FirebaseAuth.instance.currentUser?.sendEmailVerification();
   return showDialog(context: context,
       barrierDismissible: false,
       builder: (BuildContext context){
@@ -14,11 +15,11 @@ emailAlert(context){
             child: ListBody(
               children: const [
                 Text("Your email needs to be verified to continue to use the app.\n"
-                    "Verify the email address you signed up with to continue.")
+                    "Please check the email you used to register to continue to use the app.")
               ],
             ),),
           actions: <Widget>[
-            TextButton(child: const Text("Return to Login Screen"),
+            TextButton(child: const Text("Close"),
               onPressed: (){
                 // SignedOutAction((context) {
                 //   Navigator.of(context).pushReplacementNamed('/sign-in');});

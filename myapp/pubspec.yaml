@@ -90,6 +90,7 @@ flutter:
       - assets/images/rider-bike-icon.png
       - assets/images/btn_google_signin_dark_normal_web.png
       - assets/images/alex.jpg
+      - assets/keys/google_client_id.txt
       
   #   - images/a_dot_ham.jpeg
 
