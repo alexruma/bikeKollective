@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class RatingStar extends StatelessWidget {
-  const RatingStar({Key? key, required this.rating}) : super(key: key);
+  RatingStar({Key? key, required this.rating}) : super(key: key);
 
-  final int rating;
+  var rating;
 
   @override
   Widget build(BuildContext context) {
@@ -11,9 +11,9 @@ class RatingStar extends StatelessWidget {
       padding: const EdgeInsets.all(10.0),
       child: Row(
           children: List.generate(5, (index) {
-            return (Icon(index >= rating ? Icons.star_border : Icons.star,
-                color: index >= rating ? Colors.yellow : Colors.yellow));
-          })),
+        return (Icon(index >= rating ? Icons.star_border : Icons.star,
+            color: index >= rating ? Colors.yellow : Colors.yellow));
+      })),
     );
   }
 }
