@@ -116,7 +116,6 @@ class _BikeListState extends State<BikeList> {
                       subtitle: Text('Year: ${document['year']}'),
                       onTap: () => Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => SingleBike(
-                                bikeDoc: document,
                                 bikeId: document.id,
                               ))),
                     ); // ListTile
@@ -129,9 +128,9 @@ class _BikeListState extends State<BikeList> {
                       title: Text('Type: ${document['category']}',
                           textAlign: TextAlign.left),
                       subtitle: Text('Year: ${document['year']}'),
+                      // Route to individual bike page.
                       onTap: () => Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => SingleBike(
-                                bikeDoc: document,
                                 bikeId: document.id,
                               ))),
                     );
