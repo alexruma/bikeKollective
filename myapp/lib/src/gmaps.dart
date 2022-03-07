@@ -237,7 +237,6 @@ class _GmapsState extends State<Gmaps> {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
                 }
-
                 var items = snapshot.data?.docs;
                 //Bikes added to dictionary
                 //Updated through location update
@@ -314,8 +313,11 @@ class _GmapsState extends State<Gmaps> {
                                           " Condition: ",
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold),
-                                        ),
-                                        Text("${items[index]['condition']}")
+                                        ), Expanded(
+                                          child: Text("${items[index]['condition']}",
+                                            softWrap: false,
+                                          overflow: TextOverflow.clip,),
+                                        )
                                       ]),
                                       Row(
                                         children: [
@@ -330,7 +332,8 @@ class _GmapsState extends State<Gmaps> {
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold),
                                           ),
-                                          Text('${items[index]['model']}')
+                                          Expanded(child: Text('${items[index]['model']}',
+                                          overflow: TextOverflow.clip,))
                                         ],
                                       ),
                                       Row(

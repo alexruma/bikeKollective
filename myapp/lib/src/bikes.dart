@@ -1,5 +1,6 @@
 import 'dart:ffi';
 
+import 'package:bike_kollective/helpers/distanceHelpers.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
@@ -92,52 +93,66 @@ class _BikeListState extends State<BikeList> {
                 child: CircularProgressIndicator(),
               ); // Center
             }
-
-            return ListView.builder(
-                scrollDirection: Axis.vertical,
-                itemCount: snapshot.data?.docs.length,
-                itemBuilder: (context, index) {
-                  DocumentSnapshot document =
-                      snapshot.data?.docs[index] as DocumentSnapshot;
-
-                  if (searchTerm.isNotEmpty &&
-                          document['category'].contains(searchTerm) ||
-                      searchTerm.isNotEmpty &&
-                          document['year'].toString().contains(searchTerm) ||
-                      searchTerm.isNotEmpty &&
-                          document['rating'].toString().contains(searchTerm)) {
-                    return ListTile(
-                      contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 20.0, vertical: 10.0),
-                      tileColor: Colors.lightBlueAccent,
-                      leading: cardImage(document['image']),
-                      title: Text('Type: ${document['category']}',
-                          textAlign: TextAlign.left),
-                      subtitle: Text('Year: ${document['year']}'),
-                      onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => SingleBike(
-                                bikeId: document.id,
-                              ))),
-                    ); // ListTile
-                  } else if (searchTerm.isEmpty) {
-                    return ListTile(
-                      contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 20.0, vertical: 10.0),
-                      tileColor: Colors.lightBlueAccent,
-                      leading: cardImage(document['image']),
-                      title: Text('Type: ${document['category']}',
-                          textAlign: TextAlign.left),
-                      subtitle: Text('Year: ${document['year']}'),
-                      // Route to individual bike page.
-                      onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => SingleBike(
-                                bikeId: document.id,
-                              ))),
+            return FutureBuilder(
+                future: bikeListSort(snapshot.data?.docs),
+                builder: (BuildContext context,  snapshot){
+                  if(!snapshot.hasData){
+                    return const Center(
+                      child: CircularProgressIndicator(),
                     );
-                  } else {
-                    return SizedBox.shrink();
                   }
-                }); // ListView
+                  List bikes= snapshot.data as List;
+
+                  return ListView.builder(
+                      scrollDirection: Axis.vertical,
+                      itemCount: bikes.length,
+                      itemBuilder: (context, index) {
+                        DocumentSnapshot document =
+                        bikes[index] as DocumentSnapshot;
+
+                        if (searchTerm.isNotEmpty &&
+                            document['category'].contains(searchTerm) ||
+                            searchTerm.isNotEmpty &&
+                                document['year'].toString().contains(searchTerm) ||
+                            searchTerm.isNotEmpty &&
+                                document['rating'].toString().contains(searchTerm)) {
+                          return ListTile(
+                            contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 20.0, vertical: 10.0),
+                            tileColor: Colors.lightBlueAccent,
+                            leading: cardImage(document['image']),
+                            title: Text('Type: ${document['category']}',
+                                textAlign: TextAlign.left),
+                            subtitle: Text('Year: ${document['year']}'),
+                            onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => SingleBike(
+                                  bikeId: document.id,
+                                ))),
+                          ); // ListTile
+                        } else if (searchTerm.isEmpty) {
+                          return ListTile(
+                            contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 20.0, vertical: 10.0),
+                            tileColor: Colors.lightBlueAccent,
+                            leading: cardImage(document['image']),
+                            title: Text('Type: ${document['category']}',
+                                textAlign: TextAlign.left),
+                            subtitle: Text('Year: ${document['year']}'),
+                            // Route to individual bike page.
+                            onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => SingleBike(
+                                  bikeId: document.id,
+                                ))),
+                          );
+                        } else {
+                          return SizedBox.shrink();
+                        }
+                      });
+
+
+            });
+
+            ; // ListView
           }), // Stream builder
     ); // Scaffold
   }

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:location/location.dart';
 import 'package:latlong2/latlong.dart' as lt;
@@ -34,4 +35,24 @@ bikeWithinDistance(bike)async{
     return false;
   }
   return true;
+}
+
+Future<List<QueryDocumentSnapshot<Object?>>?> bikeListSort( List<QueryDocumentSnapshot<Object?>>? bikelist) async {
+  Map<String, dynamic> bikeDistance = {};
+
+  LocationData location = await Location().getLocation();
+  bikelist?.forEach((bike){
+    var curr_distance = lt.Distance().as(lt.LengthUnit.Meter,
+        lt.LatLng(location.latitude??50.0, location.longitude??50.0),
+        lt.LatLng(bike['location'].latitude,bike['location'].longitude));
+    bikeDistance[bike.id] = curr_distance;
+
+  });
+  bikelist?.sort((a, b) {
+    var asort = bikeDistance[a.id] ?? 00;
+    var bsort = bikeDistance[b.id] ?? 00;
+    return asort.compareTo(bsort);
+  });
+  return bikelist;
+
 }
