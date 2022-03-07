@@ -1,10 +1,7 @@
-import 'package:bike_kollective/src/account.dart';
 import 'package:bike_kollective/src/bikes.dart';
 import 'package:bike_kollective/src/set_up_account.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:bike_kollective/src_exports.dart';
-import 'package:flutterfire_ui/auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class NavBarPage extends StatefulWidget {
@@ -27,12 +24,7 @@ class _NavBarPageState extends State<NavBarPage> {
     });
   }
 
-  final List<Widget> _pages = [
-    Gmaps(),
-    AddBike(),
-    BikeList(),
-    AccountPage()
-  ];
+  final List<Widget> _pages = [Gmaps(), AddBike(), BikeList(), AccountPage()];
 
   final List<String> _titles = const [
     "Bike Kollective",
@@ -70,9 +62,7 @@ class _NavBarPageState extends State<NavBarPage> {
             padding: const EdgeInsets.all(2.0),
             child: Text(_titleText),
           )),
-
         ]),
-
       ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
@@ -97,7 +87,6 @@ class _NavBarPageState extends State<NavBarPage> {
         currentIndex: _selectedIndex,
         onTap: _updateIndex,
       ),
-
       body: Center(
         child: _pages.elementAt(_selectedIndex),
       ),
