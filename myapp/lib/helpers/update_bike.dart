@@ -16,13 +16,12 @@ class BikeUpdate {
   Future updateBikeRating(newRating, oldRating, numberOfRatings) async {
     numberOfRatings += 1;
     // Calculate new average rating.
-    var newAvgRating =
+    double newAvgRating =
         ((oldRating * (numberOfRatings - 1)) + newRating) / numberOfRatings;
 
-    return await userCollection.doc(bikeDocId).update({
-      "rating": newAvgRating.roundToDouble(),
-      "numberOfRatings": numberOfRatings
-    });
+    return await userCollection
+        .doc(bikeDocId)
+        .update({"rating": newAvgRating, "numberOfRatings": numberOfRatings});
   }
 
   // Adds a single new tage to the tags field.
