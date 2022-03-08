@@ -269,6 +269,9 @@ class _AddBikeState extends State<AddBike> {
                                     child: const Text('Submit'),
                                   ),
                                   ElevatedButton(
+                                    style: ButtonStyle(
+                                      backgroundColor: MaterialStateProperty.all(Colors.red)
+                                    ),
                                     onPressed: () => Navigator.of(context)
                                         .pushNamedAndRemoveUntil(
                                             '/home', (route) => false),
