@@ -17,7 +17,7 @@ class BikeUpdate {
     numberOfRatings += 1;
     // Calculate new average rating.
     var newAvgRating =
-        ((newRating * (numberOfRatings - 1)) + oldRating) / numberOfRatings;
+        ((oldRating * (numberOfRatings - 1)) + newRating) / numberOfRatings;
 
     return await userCollection.doc(bikeDocId).update({
       "rating": newAvgRating.roundToDouble(),
