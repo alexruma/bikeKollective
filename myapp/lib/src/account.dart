@@ -45,7 +45,7 @@ class _AccountPageState extends State<AccountPage> {
             return const Center(child: CircularProgressIndicator());
           }
           var items = snapshot.data?.docs;
-          
+
           if (items.length == 0) {
             return const Center(child: Text("No Bikes Currently owned"));
           }
@@ -136,15 +136,15 @@ class _AccountPageState extends State<AccountPage> {
               ],
             ),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                "Email: ${user['email']}",
-                style: TextStyle(fontSize: 16),
-              )
-            ],
-          ),
+          // Row(
+          //   mainAxisAlignment: MainAxisAlignment.center,
+          //   children: [
+          //     Text(
+          //       "Email: ${user['email']}",
+          //       style: TextStyle(fontSize: 16),
+          //     )
+          //   ],
+          // ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

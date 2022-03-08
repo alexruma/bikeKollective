@@ -56,3 +56,18 @@ Future<List<QueryDocumentSnapshot<Object?>>?> bikeListSort( List<QueryDocumentSn
   return bikelist;
 
 }
+
+bikeDistanceFromUser(List bikelist)async {
+  Map<String, dynamic> bikeDistance = {};
+
+  LocationData location = await Location().getLocation();
+  bikelist.forEach((bike){
+    var curr_distance = lt.Distance().as(lt.LengthUnit.Meter,
+        lt.LatLng(location.latitude??50.0, location.longitude??50.0),
+        lt.LatLng(bike['location'].latitude,bike['location'].longitude));
+    bikeDistance[bike.id] = curr_distance;
+
+  });
+
+  return bikeDistance;
+}

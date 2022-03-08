@@ -497,7 +497,8 @@ class _GmapsState extends State<Gmaps> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Row(
-                            children: const [Text("Current Bike")],
+                            children: const [Text("Current Bike",
+                              style: TextStyle(fontSize: 16),)],
                           ),
                           Row(
                             children: [cardImage(bikeinfo['image'])],
