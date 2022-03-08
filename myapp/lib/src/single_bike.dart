@@ -26,8 +26,12 @@ class _SingleBikeState extends State<SingleBike> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("View Bike", style:
-      TextStyle(fontFamily: 'Righteous', fontSize: 24),),),
+      appBar: AppBar(
+        title: const Text(
+          "View Bike",
+          style: TextStyle(fontFamily: 'Righteous', fontSize: 24),
+        ),
+      ),
       body: FutureBuilder<DocumentSnapshot>(
           future: FirebaseFirestore.instance
               .collection('bikes')
@@ -63,11 +67,11 @@ class _SingleBikeState extends State<SingleBike> {
                       ),
                       FutureBuilder(
                           future: bikeWithinDistance(data),
-                          builder: (context, snapshot){
-                            if (!snapshot.hasData){
+                          builder: (context, snapshot) {
+                            if (!snapshot.hasData) {
                               return const Text("");
                             }
-                            if(snapshot.data == false){
+                            if (snapshot.data == false) {
                               return const Text("");
                             }
                             return ElevatedButton(
@@ -88,8 +92,7 @@ class _SingleBikeState extends State<SingleBike> {
                                     color: Colors.deepPurpleAccent),
                               ),
                             );
-                          }
-                      ),
+                          }),
                       fieldRow("available", data['available']),
                       fieldRow("category", data['category']),
                       fieldRow("condition", data['condition']),
@@ -289,6 +292,12 @@ class _SingleBikeState extends State<SingleBike> {
     if (formKey.currentState!.validate()) {
       // If all forms validated and waiver checked, save state.
       formKey.currentState!.save();
+      // Alert user tag has been added.
+      showDialog(
+          context: context,
+          builder: (BuildContext context) => const AlertDialog(
+              content: Text("Tag Added.",
+                  style: TextStyle(fontWeight: FontWeight.bold))));
     }
   }
 
