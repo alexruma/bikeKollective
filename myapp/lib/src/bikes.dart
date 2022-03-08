@@ -1,15 +1,9 @@
-import 'dart:ffi';
 import 'dart:async';
-import 'package:bike_kollective/models/bikeTimeAlert.dart';
+import 'package:bike_kollective/helpers/distanceHelpers.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:location/location.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:http/http.dart' as http;
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:latlong2/latlong.dart' as lt;
-import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import '../helpers/RatingStar.dart';
 import '../models/cardImage.dart';
 import 'package:bike_kollective/src_exports.dart';
@@ -18,63 +12,26 @@ class BikeList extends StatefulWidget {
   const BikeList({Key? key}) : super(key: key);
 
   @override
-  _BikeListState createState() => new _BikeListState();
+  _BikeListState createState() => _BikeListState();
 }
 
 class _BikeListState extends State<BikeList> {
   // ---------------------------------------------------------------------
   // This section is from Gmaps - location finding functions
   // ---------------------------------------------------------------------
-  //location
-  final Location _location = Location();
-  late LocationData _currPosition;
-
-  late StreamSubscription listen;
-  //Dictionary of distance from user True or False if close enough
-  Map<String, bool> closePoint = {};
 
   // Dictionary of distance from user to bike
   Map<String, dynamic> bikeDistance = {};
-  // Dictionary of bike locations
-  Map<String, GeoPoint> bikeLoc = {};
-
-  late GoogleMapController mapController;
-  final Map<MarkerId, Marker> _markers = <MarkerId, Marker>{};
-  late Stream user;
 
   Map<String, dynamic> bikeinfo = {};
-
-  final Stream<QuerySnapshot> bikes = FirebaseFirestore.instance
-      .collection('bikes')
-      .where('stolen', isEqualTo: false)
-      .snapshots();
-  final Stream<DocumentSnapshot> user1 = FirebaseFirestore.instance
-      .collection('users')
-      .doc(FirebaseAuth.instance.currentUser?.uid)
-      .snapshots();
-  final CollectionReference currBike =
-      FirebaseFirestore.instance.collection('bikes');
-
-  alertTime alert = alertTime();
-
-  // Starting position of the map
-  // Location is Oregon state university
-  final LatLng _center = const LatLng(44.56457554667605, -123.27994855698064);
 
   // Function to ask permission for location
   Future<void> requestPermission() async {
     await Permission.location.request();
-
     setState(() {
-      currLocation();
     });
   }
 
-  // Startup tasks when map is created
-  void _onMapCreated(GoogleMapController controller) {
-    mapController = controller;
-    // createMarkers();
-  }
 
   //Init State
   @override
@@ -86,41 +43,9 @@ class _BikeListState extends State<BikeList> {
   // Dispose to stop listeners when leaving widget
   @override
   void dispose() async {
-    mapController.dispose();
-    listen.cancel();
     super.dispose();
   }
 
-  currLocation() async {
-    LocationData _currPosition = await _location.getLocation();
-    const lt.Distance distance = lt.Distance();
-    // _location.changeSettings(interval: 4000);
-    listen = _location.onLocationChanged.listen((event) {
-      if (mounted) {
-        setState(() {
-          bikeLoc.forEach((key, value) {
-            var space1 = distance.as(
-                lt.LengthUnit.Meter,
-                lt.LatLng(event.latitude ?? 00.0, event.longitude ?? 00.00),
-                lt.LatLng(value.latitude, value.longitude));
-            bikeDistance[key] = space1;
-            closePoint[key] = space1 < 10;
-          });
-        });
-      }
-    });
-    return _currPosition;
-  }
-
-  double distanceConvDouble(meters) {
-    if (meters < 1000) {
-      double distance = meters * 3.281;
-      return distance;
-    } else {
-      double distance = meters / 1609;
-      return distance;
-    }
-  }
 
   String distanceConvStr(meters) {
     if (meters < 1000) {
@@ -140,7 +65,7 @@ class _BikeListState extends State<BikeList> {
           "Distance: ",
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        //Text(distanceConvStr(bikeDistance[data])),
+        Text(distanceConvStr(bikeDistance[data])),
       ],
     );
   }
@@ -202,10 +127,7 @@ class _BikeListState extends State<BikeList> {
                               child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    const Text('Distance: ',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold)),
-                                    bikeFromUser(bikeDistance[document.id]),
+                                    bikeFromUser(document.id),
                                   ])),
                         Expanded(
                           flex: 20,
@@ -220,8 +142,9 @@ class _BikeListState extends State<BikeList> {
                         ),
                         Expanded(
                           flex: 20,
-                          child: Row(children: [
-                            Text('                 '),
+                          child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
                             RatingStar(rating: document['rating'])
                           ]),
                         ),
@@ -261,7 +184,7 @@ class _BikeListState extends State<BikeList> {
         elevation: 0.0,
         backgroundColor: Colors.white,
         bottom: PreferredSize(
-          preferredSize: Size.fromHeight(0.0),
+          preferredSize: const Size.fromHeight(0.0),
           child: Container(
               //  padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
@@ -275,10 +198,10 @@ class _BikeListState extends State<BikeList> {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      Icon(Icons.search, color: Colors.grey),
+                      const Icon(Icons.search, color: Colors.grey),
                       Expanded(
                         child: TextField(
-                          decoration: InputDecoration.collapsed(
+                          decoration: const InputDecoration.collapsed(
                             hintText: 'Search',
                           ),
                           onChanged: (value) {
@@ -299,30 +222,52 @@ class _BikeListState extends State<BikeList> {
           builder:
               (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (!snapshot.hasData) {
-              return Center(
+              return const Center(
                 child: CircularProgressIndicator(),
               ); // Center
             }
-
-            return ListView.builder(
-                scrollDirection: Axis.vertical,
-                itemCount: snapshot.data?.docs.length,
-                itemBuilder: (context, index) {
-                  DocumentSnapshot document =
-                      snapshot.data?.docs[index] as DocumentSnapshot;
-                  bikeLoc[document.id] = document['location'];
-
-                  if (searchTerm.isNotEmpty &&
-                      isIn(document['tags'], searchTerm) &&
-                      document['available'] != false) {
-                    return buildBikeCard(document);
-                  } else if (searchTerm.isEmpty &&
-                      document['available'] != false) {
-                    return buildBikeCard(document);
-                  } else {
-                    return SizedBox.shrink();
+            return FutureBuilder(
+                future: bikeListSort(snapshot.data?.docs),
+                builder: (BuildContext context, snapshot){
+                  if(!snapshot.hasData){
+                    return const Center(
+                        child: CircularProgressIndicator());
                   }
-                }); // ListView
+                  List Bikes = snapshot.data as List;
+
+                  return FutureBuilder(
+                      future: bikeDistanceFromUser(Bikes),
+                      builder: (BuildContext context, bikedist){
+                        if(!bikedist.hasData){
+                          return const Center(
+                              child: CircularProgressIndicator());
+                        }
+                        bikeDistance = bikedist.data as Map<String, dynamic>;
+                        return ListView.builder(
+                            scrollDirection: Axis.vertical,
+                            itemCount: Bikes.length,
+                            itemBuilder: (context, index) {
+                              DocumentSnapshot document =
+                              Bikes[index] as DocumentSnapshot;
+                              // bikeLoc[document.id] = document['location'];
+
+                              if (searchTerm.isNotEmpty &&
+                                  isIn(document['tags'], searchTerm) &&
+                                  document['available'] != false) {
+                                return buildBikeCard(document);
+                              } else if (searchTerm.isEmpty &&
+                                  document['available'] != false) {
+                                return buildBikeCard(document);
+                              } else {
+                                return SizedBox.shrink();
+                              }
+                            });
+                      });
+
+
+                });
+
+             // ListView
           }), // Stream builder
     ); // Scaffold
   }
